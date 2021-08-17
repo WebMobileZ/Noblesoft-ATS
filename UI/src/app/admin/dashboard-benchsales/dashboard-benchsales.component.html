@@ -1,0 +1,25 @@
+<p-card>
+  <h2>Bench Sales Summary  <p-dropdown class="p-m-2" [options]="dateDropDown" [(ngModel)]="selectBenchSales" (onChange)="onStatusChangeBenchSales($event)" optionLabel="name"></p-dropdown>
+  </h2>
+  <p-tabView>
+    <p-tabPanel header="My Bench Sales Summary">
+
+      <p-table [value]="activeBenchSales" [scrollable]="true"  [loading]="loading" scrollHeight="150px">
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope="col">Employee Name</th>
+            <th scope="col">Submissions</th>
+            <th scope="col">Placed</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-bench>
+          <tr >
+            <td><span>{{bench.name}}</span></td>
+            <td scope="row">{{bench.submissions_count}}</td>
+            <td scope="row">{{bench.placed}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+  </p-tabView>
+</p-card>

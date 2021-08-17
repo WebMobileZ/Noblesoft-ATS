@@ -1,0 +1,24 @@
+<p-card>
+  <h2>Placed Consultants</h2>
+  <p-tabView>
+    <p-tabPanel header="Placed Consultants">
+
+      <p-table [value]="activeBenchSales" [scrollable]="true"  [loading]="loading" scrollHeight="150px">
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope="col">Candidate Name</th>           
+            <th scope="col"> Expected Rate</th>
+            <th scope="col">Marketing Rate</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-bench>
+          <tr >
+            <td><span>{{bench.name}}</span></td>
+            <td scope="row">{{bench.rate}}</td>
+            <td scope="row">{{bench.expected_rate}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+  </p-tabView>
+</p-card>

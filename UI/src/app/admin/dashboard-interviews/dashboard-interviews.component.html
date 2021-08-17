@@ -1,0 +1,32 @@
+<p-card [style]="{'height': '27rem', 'margin-top': '0em'}">
+  <h2> Scheduled  Interviews<p-dropdown class="p-m-2"  [options]="interviewDropDown" [(ngModel)]="selectBenchTalent" (onChange)="onStatusChangeBenchSales($event)" optionLabel="name"></p-dropdown> </h2>
+  <p-tabView>
+
+      <p-tabPanel header="Interviews Schedules">
+        <p-table [value]="applicants" [scrollable]="true" [loading]="loading" scrollHeight="130px">
+          <ng-template pTemplate="header">
+            <tr>
+              <th scope="col">Applicant Name</th>
+
+            <th scope="col">Job Title</th>
+            <th scope="col">IT Recruiter</th>
+            <th scope="col">Manager</th>
+            <th scope="col">Client Name</th>
+            <th scope="col">Schedule Date</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-app>
+            <tr >
+              <td scope="row">{{app.first_name}} {{app.last_name}}</td>
+              <td>{{app.with_jobs?.job_title}}</td>
+              <td>{{app.user.name}}</td>
+              <td>{{app.with_jobs?.user?.name}}</td>
+              <td>{{app.with_jobs?.clients?.name}}</td>
+              <td>{{app?.schedule_date|date}} {{app?.timezone}}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+    </p-tabPanel>
+  </p-tabView>
+</p-card>

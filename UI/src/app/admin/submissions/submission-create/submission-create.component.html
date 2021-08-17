@@ -1,0 +1,437 @@
+<p-toast position="bottom-right"></p-toast>
+<div class="p-grid p-ai-stretch vertical-container p-m-2">
+  <div class="p-md-9">
+    <p-card header="Consultant Submission">
+      <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col-6">
+            <label>Choose Consultant:</label>
+            <p-dropdown #dd [options]="states" [(ngModel)]="selectedStates" formControlName="state"
+              [style]="{'width':'100%'}" scrollHeight="400px" filter="true" filterBy="value,label"
+              resetFilterOnHide="true" (onFocus)="OnFocus()" (onChange)="onChange($event)" (keydown)="statesUi($event)">
+            </p-dropdown>
+            <!-- <input type="text" formControlName="state" class="form-control" placeholder="State" required> -->
+            <div *ngIf="state.invalid && (state.dirty || state.touched)" class="form-text text-muted">
+              <div *ngIf="state.errors?.required">
+                Consultant is required.
+              </div>
+            </div>
+            <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.state }}</small>
+          </div>
+          <div class="p-field p-col-6">
+            <label>Prime Vendor/Vendor:</label>
+            <p-dropdown  [(ngModel)]="vtype" placeholder="Choose Vendor" [options]="requirement"   [style]="{'width':'100%'}"
+              scrollHeight="400px" filter="true" filterBy="label,value" resetFilterOnHide="true" [ngModelOptions]="{standalone: true}"></p-dropdown>
+
+          </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid"
+          *ngIf="(vtype=='Prime Vendor' ||vtype=='Vendor' )">
+
+          <div class="p-field p-col">
+            <label>Choose Vendor :</label>
+            <div class="p-inputgroup">
+              <p-button  (click)="showModalDialog()" icon="pi pi-plus"></p-button>
+
+              <p-dropdown #vendir [options]="vendors" [(ngModel)]="selectedVendors" formControlName="vid"
+                [style]="{'width':'100%'}" scrollHeight="400px" filter="true" filterBy="value,label"
+                resetFilterOnHide="true" (onChange)="ChangeVendor($event,vendir)">
+              </p-dropdown>
+            </div>
+          </div>
+          <div class="p-field p-col" *ngIf="vendir.value">
+            <label>Choose {{vendir.label}} Contacts:</label>
+            <div class="p-inputgroup">
+              <p-button  (click)="showModalDialog1()" icon="pi pi-plus"></p-button>
+              <p-dropdown #constatcs [options]="contacts" [(ngModel)]="selectedContacts"
+                formControlName="vendorDetailId" [style]="{'width':'100%'}" scrollHeight="400px" filter="true"
+                filterBy="value,label" resetFilterOnHide="true" (onChange)="ChangeContacts($event)">
+              </p-dropdown>
+            </div>
+            <div *ngIf="vendorDetailId.invalid && (vendorDetailId.dirty || vendorDetailId.touched)"
+              class="form-text text-muted">
+              <div *ngIf="vendorDetailId.errors?.required">
+                Contact is required.
+              </div>
+            </div>
+            <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.vendorDetailId }}</small>
+
+          </div>
+
+          <div class="p-field p-col">
+            <label>End Client:</label>
+            <div class="p-inputgroup">
+              <p-button (click)="showModalDialogClient()" icon="pi pi-plus"></p-button>
+
+              <p-dropdown [options]="clients" [(ngModel)]="selectedClients" formControlName="clientId"
+                [style]="{'width':'100%'}" scrollHeight="400px" filter="true" filterBy="value,label"
+                resetFilterOnHide="true" (onChange)="ChangeClients($event)">
+              </p-dropdown>
+            </div>
+            <div *ngIf="clientId.invalid && (clientId.dirty || clientId.touched)" class="form-text text-muted">
+              <div *ngIf="clientId.errors?.required">
+                Client is required.
+              </div>
+            </div>
+            <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.clientId }}</small>
+          </div>
+          <div class="p-field p-col">
+
+            <label>Client Location:</label>
+            <input type="text" formControlName="endClientLocation" class="form-control"
+              placeholder="End Client Location">
+            <div *ngIf="endClientLocation.invalid && (endClientLocation.dirty || endClientLocation.touched)"
+              class="form-text text-muted">
+              <div *ngIf="endClientLocation.errors?.required">
+                End ClientLocation is required.
+              </div>
+
+            </div>
+            <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.endClientLocation }}</small>
+
+
+          </div>
+
+        </div>
+        <div class="p-fluid p-formgrid p-grid"
+          *ngIf="(vtype=='Prime Vendor' ||vtype=='Vendor' )">
+
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col-3">
+
+            <label>Actual Rate:</label>
+            <input type="number" formControlName="actualRate" class="form-control" placeholder="Actual Rate" disabled>
+            <div *ngIf="actualRate.invalid && (actualRate.dirty || actualRate.touched)" class="form-text text-muted">
+              <div *ngIf="actualRate.errors?.required">
+                ActualRate is required.
+              </div>
+            </div>
+
+          </div>
+          <div class="p-field p-col-3">
+
+            <label>Submission Rate:</label>
+            <input type="number" formControlName="submissionRate" class="form-control" placeholder="Submission Rate">
+            <div *ngIf="submissionRate.invalid && (submissionRate.dirty || submissionRate.touched)"
+              class="form-text text-muted">
+              <div *ngIf="submissionRate.errors?.required">
+                submissionRate is required.
+              </div>
+            </div>
+            <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.submissionRate }}</small>
+
+          </div>
+         <!-- <div class="p-field p-col">
+
+            <label>Submission Status</label>
+            <select #statusvaluei class="form-control" formControlName="vendorStatus">
+              <option value="">--select--</option>
+              <option value="Interview scheduled">Interview scheduled</option>
+              <option value="Submitted to Client">Submitted to Client</option>
+              <option value="Submitted to Vendor">Submitted to Vendor</option>
+              <option value="Disqualified">Disqualified</option>
+              <option value="Client rejected">Client rejected</option>
+              <option value="Vendor Rejected">Vendor Rejected</option>
+              <option value="Vendor screening call">Vendor screening call</option>
+              <option value="Waiting for Evaluation">Waiting for Evaluation</option>
+              <option value="Placed">Placed</option>
+            </select>
+            <div *ngIf="vendorStatus.invalid && (vendorStatus.dirty || vendorStatus.touched)"
+              class="form-text text-muted">
+              <div *ngIf="vendorStatus.errors?.required">
+                vendorStatus is required.
+              </div>
+
+              <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.vendorStatus }}</small>
+            </div>
+          </div> -->
+
+        </div>
+      <!--  <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col" *ngIf="(statusvaluei.value=='Interview scheduled')">
+
+            <label>Interview Schedule Date :</label>
+            <p-calendar   dateFormat="MM d, yy" [showTime]="true"  formControlName="scheduleDate" inputId="time"></p-calendar>
+
+            <input type="date" pInputText formControlName="scheduleDate" />
+          </div>
+
+          <div class="p-field p-col" *ngIf="(statusvaluei.value=='Interview scheduled')">
+
+            <label> Time Zone :</label>
+            <select class="form-control" formControlName="timezone">
+
+              <option value="EST">EST</option>
+              <option value="PST">PST</option>
+              <option value="CST">CST</option>
+              <option value="MST">MST</option>
+            </select>
+
+          </div>
+        </div> -->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Comments:</label>
+              <textarea formControlName="vendorComments" class="form-control"></textarea>
+              <div *ngIf="vendorComments.invalid && (vendorComments.dirty || vendorComments.touched)"
+                class="form-text text-muted">
+              </div>
+              <small class="form-text text-muted" *ngIf="serverErrors">{{ vendorComments.jobExperience }}</small>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="update ml-auto mr-auto">
+            <button type="submit" class="btn btn-primary btn-round" [disabled]="!registerForm.valid">Submit
+              Consultant</button>
+          </div>
+        </div>
+      </form>
+    </p-card>
+  </div>
+  <div class="p-col-3">
+    <p-card header="Overview {{dd.value?dd.label:''}}" [style]="{'width': '100%'}">
+      <div class="p-fluid p-formgrid p-grid">
+
+        <div class="p-field p-col-12">
+
+          <label><strong>Email:</strong> {{cemail}}</label>
+        </div>
+        <!--  <div class="p-field p-col-4">
+          <label>Mobile Number:</label>
+          <input type="text" value="{{cmobile}}" pInputText [disabled]="disabled">
+        </div>
+      -->
+
+        <div class="p-field p-col-12">
+          <label><strong>Technology:</strong> {{ctechnology}}</label>
+
+        </div>
+        <div class="p-field p-col-12">
+          <label><strong>Rate:</strong> {{crate}}</label>
+
+        </div>
+
+
+      </div>
+      <div class="p-fluid p-formgrid p-grid" *ngIf="(vtype=='Prime Vendor' ||vtype=='Vendor' )">
+        <div class="p-field p-col-12" *ngIf="vcname">
+          <div class="">
+            <label><strong>{{primevendorValue}} Contact Name:</strong> {{vcname}}</label>
+
+          </div>
+        </div>
+        <div class="p-field p-col-12" *ngIf="vmobile">
+          <label><strong>{{primevendorValue}} Mobile Number:</strong> {{vmobile}}</label>
+
+        </div>
+
+
+      </div>
+
+    </p-card>
+  </div>
+
+</div>
+<div class="p-grid p-ai-stretch vertical-container p-m-2">
+  <div class="p-md-12">
+    <p-table [columns]="cols" [value]="data" [scrollable]="true" [filterDelay]="0" [resizableColumns]="true"
+      columnResizeMode="expand" [reorderableColumns]="true" autoLayout="true">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns">
+            {{col.header}}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr>
+          <td *ngFor="let col of columns">
+            {{rowData|field:col}}
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="summary">
+        There are {{data?.length}} Submissions
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog header="Add New Vendor Contact" [(visible)]="displayModal1" [modal]="true" [style]="{width: '50vw'}"
+  [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+  <form [formGroup]="registerContact" (ngSubmit)="registerContactForm()">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Name:</label>
+          <input type="text" class="form-control" formControlName="vendorcontactName" placeholder="Vendor Contact Name">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label> Email:</label>
+          <input type="email" class="form-control" formControlName="vendorcontactEmail"
+            placeholder="Vendor Contact Email">
+          <div *ngIf="vendorcontactEmail.invalid && (vendorcontactEmail.dirty || vendorcontactEmail.touched)"
+            class="form-text text-muted">
+            <div *ngIf="vendorcontactEmail.errors?.required">
+              Email is required.
+            </div>
+          </div>
+          <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.contactEmail }}</small>
+
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Mobile Number:</label>
+          <p-inputMask formControlName="vendorcontactMobile" placeholder="(999) 999-9999" mask="(999) 999-9999">
+          </p-inputMask>
+
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label> EXT:</label>
+          <input type="number" class="form-control" formControlName="vendorext" placeholder="EXT">
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary btn-round" [disabled]="!registerContact.valid">Add Vendor
+      Contact</button>
+  </form>
+  <ng-template pTemplate="footer">
+  </ng-template>
+</p-dialog>
+<p-dialog header="Add New Vendor" [(visible)]="displayModal" [modal]="true" [style]="{width: '70vw'}"
+  [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+
+  <form [formGroup]="registerVendor" (ngSubmit)="registerVendorCompany()">
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Company Name:</label>
+          <input type="text" class="form-control" formControlName="vendorCompanyName" placeholder="Vendor Company Name">
+          <div *ngIf="vendorCompanyName.invalid && (vendorCompanyName.dirty || vendorCompanyName.touched)"
+            class="form-text text-muted">
+            <div *ngIf="vendorCompanyName.errors?.required">
+              Company Name is required.
+            </div>
+          </div>
+          <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.name }}</small>
+
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label> Company LinkedIn URL:</label>
+          <input type="email" class="form-control" formControlName="linkedin_url"
+            placeholder="Partner Company LinkedIn URL">
+          <div *ngIf="linkedin_url.invalid && (linkedin_url.dirty || linkedin_url.touched)"
+            class="form-text text-muted">
+            <div *ngIf="linkedin_url.errors?.required">
+              LinkedIn URL is required.
+            </div>
+          </div>
+          <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.linkedin_url }}</small>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label> No.of employees in LinkedIn:</label>
+          <input pInputText class="form-control" formControlName="numberofemployees" placeholder=" No.of employees" />
+
+
+          <div *ngIf="numberofemployees.invalid && (numberofemployees.dirty || numberofemployees.touched)"
+            class="form-text text-muted">
+            <div *ngIf="numberofemployees.errors?.required">
+              Nof Of employees is required.
+            </div>
+          </div>
+          <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.numberofemployees }}</small>
+
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Vendor Contact Name:</label>
+          <input type="text" class="form-control" formControlName="contactName" placeholder="Vendor Contact Name">
+
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label> Contact Email:</label>
+          <input type="email" class="form-control" formControlName="contactEmail" placeholder="Vendor Contact Email">
+          <div *ngIf="contactEmail.invalid && (contactEmail.dirty || contactEmail.touched)"
+            class="form-text text-muted">
+            <div *ngIf="contactEmail.errors?.required">
+              Email is required.
+            </div>
+          </div>
+          <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.contactEmail }}</small>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>Contact Mobile Number:</label><br>
+          <p-inputMask formControlName="contactMobile" placeholder="(999) 999-9999" mask="(999) 999-9999"></p-inputMask>
+
+          <div *ngIf="contactMobile.invalid && (contactEmail.dirty || contactMobile.touched)"
+            class="form-text text-muted">
+            <div *ngIf="contactMobile.errors?.required">
+              Mobile Number is required.
+            </div>
+          </div>
+          <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.contactMobile }}</small>
+
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+          <label> EXT:</label>
+          <input type="number" class="form-control" formControlName="ext" placeholder="EXT">
+        </div>
+      </div>
+
+    </div>
+    <button type="submit" class="btn btn-primary btn-round" [disabled]="!registerVendor.valid">Add Vendor</button>
+  </form>
+
+
+
+
+
+
+  <ng-template pTemplate="footer">
+  </ng-template>
+</p-dialog>
+
+<p-dialog header="Add Client" [(visible)]="displayModalClient" [modal]="true" [style]="{width: '50vw'}"
+  [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+  <form [formGroup]="registerClient" (ngSubmit)="registerClientForm()">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Client Name:</label>
+          <input type="text" class="form-control" formControlName="clientName" placeholder="Client Name">
+          <div *ngIf="clientName.invalid && (clientName.dirty || clientName.touched)" class="form-text text-muted">
+            <div *ngIf="clientName.errors?.required">
+              Client Name is required.
+            </div>
+          </div>
+          <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.clientName }}</small>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary btn-round" [disabled]="!registerClient.valid">Add Client</button>
+  </form>
+  <ng-template pTemplate="footer">
+  </ng-template>
+</p-dialog>

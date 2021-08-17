@@ -1,0 +1,124 @@
+<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark {{getColorName}}"   [containerInside]="false">
+
+  <!-- Navbar brand -->
+  <mdb-navbar-brand><a class="navbar-brand" [routerLink]="[ '/dashboard' ]"><img width="169px"
+        src="https://webmobilez.com/wp-content/themes/webmobilez/images/logo_white.svg" /></a></mdb-navbar-brand>
+
+  <!-- Collapsible content -->
+  <links>
+
+    <!-- Links -->
+    <ul class="navbar-nav ml-auto" >
+      <li class="nav-item">
+        <a [routerLink]="[ '/login' ]" *ngIf="!(isAuthnoticated | async).authonticated" class="nav-link waves-light"
+          mdbWavesEffect>Login</a>
+      </li>
+
+      <li  routerLinkActive="nav-item active dropdown"  *ngIf="(isAuthnoticated | async).authonticated" dropdown>
+        <a dropdownToggle mdbWavesEffect  type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
+          <mdb-icon fas icon="envelope"></mdb-icon> Talent Bench <span class="caret"></span>
+        </a>
+        <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown dropdown-primary" role="menu">
+          <a class="dropdown-item waves-light" mdbWavesEffect
+            *canUserAccess="ConsultantsPermissions.consList; userState: isAuthnoticated"
+            [routerLink]="[ '/consultants/list' ]">Talent Bench List</a>
+          <a class="dropdown-item waves-light" mdbWavesEffect
+            *canUserAccess="ConsultantsPermissions.TechnologiesList; userState: isAuthnoticated"
+            [routerLink]="[ '/consultants/technologies' ]">Technologies</a>
+          <a class="dropdown-item waves-light"
+            *canUserAccess="ConsultantsPermissions.HotList; userState: isAuthnoticated" mdbWavesEffect
+            [routerLink]="[ '/consultants/hotlist' ]">Hot list</a>
+            <a class="dropdown-item waves-light"  *canUserAccess="ConsultantsPermissions.ResumeSearch; userState: isAuthnoticated"
+             mdbWavesEffect
+            [routerLink]="[ '/consultants/resume-search' ]">Resume Search</a>
+        </div>
+      </li>
+
+      <li  routerLinkActive="nav-item active dropdown" *canUserAccess="DocumentsPermissions.Documents; userState: isAuthnoticated" dropdown>
+        <a  mdbWavesEffect type="button"
+          class="nav-link  waves-light" mdbWavesEffect [routerLink]="[ '/documents/list' ]">
+          <mdb-icon fas icon="cloud"></mdb-icon> Download Center <span class="caret"></span>
+        </a>
+      </li>
+
+      <li routerLinkActive="nav-item active dropdown"  *canUserAccess="SubmissionPermissions.VendorSubmissionList; userState: isAuthnoticated" dropdown>
+        <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
+          <mdb-icon fas icon="job"></mdb-icon> Submissions<span class="caret"></span>
+        </a>
+        <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown dropdown-primary" role="menu">
+          <a class="dropdown-item waves-light" mdbWavesEffect
+            *canUserAccess="SubmissionPermissions.VendorSubmissionList; userState: isAuthnoticated"
+            [routerLink]="[ '/submissions/list' ]">Submissions List</a>
+          <a class="dropdown-item waves-light" mdbWavesEffect
+            *canUserAccess="SubmissionPermissions.SubmissionCreate; userState: isAuthnoticated"
+            [routerLink]="[ '/submissions/create' ]">Submissions Create</a>
+
+        </div>
+      </li>
+      <li routerLinkActive="nav-item active dropdown"   *ngIf="(isAuthnoticated | async).authonticated" dropdown>
+        <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
+          <mdb-icon fas icon="job"></mdb-icon> Recruitment<span class="caret"></span>
+        </a>
+        <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown dropdown-primary" role="menu">
+          <a class="dropdown-item waves-light" mdbWavesEffect
+            *canUserAccess="RecruitmentPermissions.JobsList; userState: isAuthnoticated"
+            [routerLink]="[ '/jobs/list' ]">Recruitment List</a>
+          <a class="dropdown-item waves-light" mdbWavesEffect
+            *canUserAccess="RecruitmentPermissions.PrimeVendorList; userState: isAuthnoticated"
+            [routerLink]="[ '/jobs/primevendors' ]">Prime Vendors
+            List</a>
+            <a class="dropdown-item waves-light" mdbWavesEffect
+            *canUserAccess="RecruitmentPermissions.PrimeVendorList; userState: isAuthnoticated"
+            [routerLink]="[ '/jobs/vendors' ]">Vendors
+            List</a>
+          <a class="dropdown-item waves-light"
+            *canUserAccess="RecruitmentPermissions.Partners; userState: isAuthnoticated" mdbWavesEffect
+            [routerLink]="[ '/jobs/partners' ]">Implementation Partners</a>
+          <a class="dropdown-item waves-light"
+            *canUserAccess="RecruitmentPermissions.ClientList; userState: isAuthnoticated" mdbWavesEffect
+            [routerLink]="[ '/submissions/clients' ]">Clients List</a>
+        </div>
+      </li>
+
+      <li routerLinkActive="nav-item active dropdown"  *ngIf="(isAuthnoticated | async).authonticated" dropdown>
+        <div *canUserAccess="Userspermissions.AllUser; userState: isAuthnoticated">
+          <a  mdbWavesEffect type="button" [routerLink]="[ '/users/list' ]" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
+            <mdb-icon fas icon="user"></mdb-icon> Users<span class="caret"></span>
+          </a>
+
+        </div>
+
+
+      </li>
+      <!-- Dropdown -->
+      <li routerLinkActive="nav-item active dropdown"  *ngIf="(isAuthnoticated | async).authonticated" dropdown>
+        <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
+          <mdb-icon fas icon="user"></mdb-icon> {{getUserName}} <span class="caret"></span>
+        </a>
+        <div *dropdownMenu class="dropdown-menu dropdown-menu-right dropdown dropdown-primary" role="menu">
+          <a class="dropdown-item waves-light" mdbWavesEffect [routerLink]="[ '/profile' ]" >My Profile</a>
+          <a class="dropdown-item waves-light" mdbWavesEffect [routerLink]="[ '/performance' ]" >Performance</a>
+          <a class="dropdown-item waves-light" mdbWavesEffect [routerLink]="[ '/calculator' ]" >Calculator</a>
+          <a class="dropdown-item waves-light" mdbWavesEffect (click)="logout()">Log out</a>
+        </div>
+      </li>
+
+    </ul>
+    <!-- Links -->
+  </links>
+  <!-- Collapsible content -->
+
+</mdb-navbar>
+
+
+<!--/.Navbar-->
+<!--/.Navbar-->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <router-outlet></router-outlet>
+      <!-- prime table-->
+    </div>
+  </div>
+</div>
+

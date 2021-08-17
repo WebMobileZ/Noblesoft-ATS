@@ -1,0 +1,119 @@
+<p-toast></p-toast>
+<!-- prime table-->
+<div class="card">
+  <!-- <p-messages [value]="msgs"></p-messages> -->
+  <p-table #dt1 [value]="clients" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [rowHover]="true" [autoLayout]="true" [filterDelay]="0"
+    [globalFilterFields]="['name']" columnResizeMode="expand" [reorderableColumns]="true"
+    styleClass="p-datatable-clients  p-datatable-gridlines " [paginator]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} clients"
+    [globalFilterFields]="['name']">
+
+    <ng-template pTemplate="caption">
+
+      <div class="p-d-flex">
+        <button pButton label="Clear" class="p-button-outlined p-mr-4" icon="pi pi-filter-slash"
+          (click)="clear(dt1)"></button>
+        <div class=" p-d-flex p-ai-center p-jc-between">Clients</div>
+
+        <span class="p-input-icon-left p-ml-auto">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" class="p-mr-4" (input)="dt1.filterGlobal($event.target.value, 'contains')"
+            placeholder="Search keyword" />
+        </span>
+        <button pButton pRipple label="Add Client" icon="pi pi-plus" class="p-button-success p-mr-2"
+          (click)="openNew()"></button>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Action
+          </div>
+        </th>
+
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Client Name
+            <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Created By
+            <p-columnFilter type="text" field="user.name" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Created at
+
+          </div>
+        </th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-client let-expanded="expanded">
+      <tr>
+
+        <td>
+
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+            (click)="editProduct(client)"></button>
+          <!--  <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+          (click)="deleteProduct(consultant)"></button> -->
+
+        </td>
+
+        <td>
+          {{client.name}}
+        </td>
+        <td>
+          {{client.user?.name}}
+        </td>
+        <td>
+          {{client.created_at | date}}
+        </td>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7">No Clients found.</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+</div>
+<p-dialog [(visible)]="technologyDialog" [style]="{width: '50vw'}" [baseZIndex]="10000" header="Client Details"
+  [modal]="true" styleClass="p-fluid">
+
+  <ng-template pTemplate="content">
+    <form [formGroup]="clientsForm" (ngSubmit)="updateConsultantDetails()" enctype="multipart/form-data">
+
+      <div class="p-fluid p-formgrid p-grid">
+
+        <div class="p-field p-col">
+          <label for="lastname1">Client Name:</label>
+          <input type="text" pInputText id="name" formControlName="name" />
+          <small class="p-invalid" *ngIf="submitted && !name">Client Name Required</small>
+        </div>
+
+      </div>
+      <div class="p-field">
+
+        <button type="submit" class="btn btn-primary btn-round" [disabled]="!clientsForm.valid">
+           {{created_Client}}</button>
+      </div>
+
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+  </ng-template>
+
+
+</p-dialog>

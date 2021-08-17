@@ -1,0 +1,54 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+
+      <div class="p-grid p-m-2">
+        <div class="p-col-4"></div>
+        <div class="p-col-4">
+          <!-- Default form login -->
+
+
+          <div class="card">
+            <div class="card-body">
+              <form [formGroup]="loginForm" (ngSubmit)="loginFormData()" class="text-center p-5">
+                <img width="169px"
+        src="https://webmobilez.com/wp-content/themes/webmobilez/images/logo.svg" />
+                <p class="h4 mb-4"></p>
+                <!-- Email -->
+                <input type="email" formControlName="email" id="defaultLoginFormEmail" class="form-control mb-4"
+                  placeholder="E-mail">
+                <div *ngIf="email.invalid && (email.dirty || email.touched)" class="m-2 text-muted">
+                  <div *ngIf="email.errors?.required">
+                    Email is required.
+                  </div>
+                  <div *ngIf="email.errors?.email">
+                    Invalid email address.
+                  </div>
+                </div>
+
+                <!-- Password -->
+                <input type="password" formControlName="password" id="defaultLoginFormPassword"
+                  class="form-control mb-4" placeholder="Password">
+                <div *ngIf="password.invalid && (password.dirty || password.touched )" class="text-muted">
+                  <div *ngIf="password.errors?.required">
+                    Password is required.
+                  </div>
+                </div>
+                <div *ngIf="serverErrors"  class="m-2 text-muted">
+                  {{serverErrors.password}}
+                  </div>
+                  <div *ngIf="serverErrors"  class="m-2 text-muted">
+                    {{serverErrors.email}}
+                  </div>
+
+                <!-- Sign in button -->
+                <button mdbBtn block="true" class="my-4 text-muted" [disabled]="!loginForm.valid" type="submit">Sign in</button>
+              </form>
+            </div>
+          </div>
+          <!-- Default form login -->
+        </div>
+        <div class="p-col-4"></div>
+      </div>
+    </div>
+  </div>

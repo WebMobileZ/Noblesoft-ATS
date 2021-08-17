@@ -1,0 +1,53 @@
+
+
+
+
+ <div *ngIf="user | async;">
+    <div *ngIf="!isbench">
+      <div  class="feature-intro"><br><h1>2021 Placement Performance</h1><br></div>
+      <p-rating [(ngModel)]="performance" readonly="true" [cancel]="false"></p-rating>
+    </div>
+  </div>
+
+  <div class="p-grid p-m-2" *ngIf="isbench">
+
+    <div class="p-col-8">
+      <div  class="feature-intro"><br><h1>2021 Placement Performance</h1><br></div>
+      <p-table [value]="employees">
+        <ng-template pTemplate="header">
+            <tr>
+
+                <th>Name</th>
+                <th>Performance</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-emp>
+            <tr>
+                <td>{{emp.name}}</td>
+                <td> <p-rating [(ngModel)]="emp.performance" [iconOnStyle]="{'color':'#008000'}" readonly="true" [cancel]="false"></p-rating></td>
+
+            </tr>
+        </ng-template>
+    </p-table>
+
+    </div>
+
+  </div>
+
+
+ <!-- <div class="p-grid"  *ngIf="isbench">
+    <div class="p-col-3" *ngFor="let emp of employees; index as i">
+
+
+      <p-card header="{{emp.name}} " [style]="{'width': '25rem', 'margin-bottom': '2em'}">
+        <ng-template pTemplate="header">
+
+        </ng-template>
+        <p-rating [(ngModel)]="emp.performance" [iconOnStyle]="{'color':'#008000'}" readonly="true" [cancel]="false"></p-rating>
+      </p-card>
+
+    </div>
+
+
+  </div> -->
+

@@ -1,0 +1,643 @@
+<p-toast></p-toast>
+<!-- prime table-->
+<p-dialog [(visible)]="consultantDialog" [style]="{width: '50vw'}" [baseZIndex]="10000" header="Consultant Details"
+  [modal]="true" styleClass="p-fluid">
+
+  <ng-template pTemplate="content">
+    <form [formGroup]="consultantForm" (ngSubmit)="updateConsultantDetails()" enctype="multipart/form-data">
+
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col">
+          <label for="firstname1">First Name:</label>
+          <input type="text" pInputText id="first_name" formControlName="first_name" formControlName="first_name"
+            pTooltip="Enter your First Name" />
+          <small class="p-invalid" *ngIf="submitted && !first_name">First Name is .</small>
+        </div>
+        <div class="p-field p-col">
+          <label for="lastname1">Last Name:</label>
+          <input type="text" pInputText id="name" formControlName="last_name" />
+          <small class="p-invalid" *ngIf="submitted && !last_name">Last Name is .</small>
+        </div>
+        <div class="p-field p-col">
+          <label for="firstname1">Email:</label>
+          <input type="email" pInputText id="email" formControlName="consultant_email" />
+          <small class="p-invalid" *ngIf="submitted && !last_name">Email is .</small>
+        </div>
+        <div class="p-field p-col">
+          <label for="consultant_mobile_number">Mobile Number:</label>
+          <p-inputMask formControlName="consultant_mobile_number" mask="(999) 999-9999"></p-inputMask>
+          <small class="p-invalid" *ngIf="submitted && !last_name">Email is .</small>
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-4">
+          <label for="firstname1">Technology:</label>
+          <!-- <p-dropdown [options]="technologies" formControlName="technology_id" optionLabel="name"
+            optionValue="technology_id">
+          </p-dropdown> -->
+          <p-dropdown [options]="technologies" formControlName="technology_id" [style]="{'width':'100%'}"
+            scrollHeight="400px" filter="true" filterBy="name,technology_id" resetFilterOnHide="true">
+          </p-dropdown>
+          <div *ngIf="technology_id.invalid && (technology_id.dirty || technology_id.touched)"
+            class="form-text text-muted">
+            <div *ngIf="technology_id.errors?.required">
+              Technology is required.
+            </div>
+
+          </div>
+        </div>
+        <div class="p-field p-col-4">
+          <label for="Visa">Visa Type:</label>
+          <p-dropdown [options]="visaTypes" formControlName="visaType" optionLabel="name" optionValue="value">
+          </p-dropdown>
+          <small class="p-invalid" *ngIf="submitted && !last_name">VISA is Required</small>
+        </div>
+        <div class="p-field p-col-2">
+          <label for="experience">Experience:</label>
+          <p-inputNumber id="experience" formControlName="experience"></p-inputNumber>
+          <small class="p-invalid" *ngIf="submitted && !experience">Exp is Required</small>
+        </div>
+        <div class="p-field p-col-2">
+          <label for="price">Rate:</label>
+          <p-inputNumber id="price" formControlName="rate" mode="currency" currency="USD" locale="en-US">
+          </p-inputNumber>
+          <small class="p-invalid" *ngIf="submitted && !rate">Required</small>
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-4">
+          <label for="ssn">Last 4 Digit SSN:</label>
+          <p-inputNumber formControlName="ssn" [format]="false" [maxlength]="4"></p-inputNumber>
+          <small class="p-invalid" *ngIf="submitted && !ssn">SSN is Required</small>
+        </div>
+        <div class="p-field p-col-4">
+          <label for="city">City:</label>
+          <input type="text" pInputText id="city" formControlName="city" />
+          <small class="p-invalid" *ngIf="submitted && !city">City is Required</small>
+        </div>
+        <div class="p-field p-col-4">
+          <label for="state">State:</label>
+          <p-dropdown [options]="states" formControlName="state" optionLabel="name" optionValue="value">
+          </p-dropdown>
+          <small class="p-invalid" *ngIf="submitted && !state">State is Required</small>
+        </div>
+
+
+      </div>
+
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-4">
+          <label for="city">Priority:</label>
+          <p-dropdown [options]="priority" formControlName="priority" optionLabel="name" optionValue="value">
+          </p-dropdown>
+
+        </div>
+        <div class="p-field p-col-4">
+          <label for="relocate">Relocate:</label>
+          <input type="text" pInputText id="willingLocation" formControlName="willingLocation" />
+
+        </div>
+        <div class="p-field p-col-4">
+          <label for="documentsCollected">Documents Collected:</label>
+          <input type="text" pInputText id="documentsCollected" formControlName="documentsCollected" />
+        </div>
+
+      </div>
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-4">
+          <label for="resources">Resource:</label>
+          <p-dropdown [options]="resources" formControlName="resource" optionLabel="name" optionValue="value">
+          </p-dropdown>
+
+        </div>
+        <div class="p-field p-col-4">
+          <label for="Availabity">Availabity:</label>
+          <input type="text" pInputText id="availabity" formControlName="availabity" />
+
+        </div>
+        <div class="p-field p-col-4">
+          <label for="consultant_status">Consultant Status:</label>
+          <p-dropdown [options]="statuses" formControlName="consultant_status" optionLabel="label" optionValue="value">
+          </p-dropdown>
+        </div>
+
+      </div>
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-4">
+          <label for="city">Best Contact Number:</label>
+          <p-inputMask formControlName="bestContactNumber" mask="(999) 999-9999"></p-inputMask>
+          <small class="p-invalid" *ngIf="submitted && !bestContactNumber">Best Mobile is .</small>
+        </div>
+        <div class="p-field p-col-4">
+          <label for="skypeId">SkypeID:</label>
+          <input type="text" pInputText id="skypeId" formControlName="skypeId" />
+
+        </div>
+        <div class="p-field p-col-4">
+          <label for="linkedInUrl">LinkedIn ID:</label>
+          <input type="text" pInputText id="linkedInUrl" formControlName="linkedInUrl" />
+        </div>
+      </div>
+      <div class="p-field">
+
+
+        <button type="submit" class="btn btn-primary btn-round" [disabled]="!consultantForm.valid">Update
+          Consultant</button>
+      </div>
+
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+
+  </ng-template>
+
+
+</p-dialog>
+<p-confirmDialog [style]="{width: '50vw'}" key="positionDialog" [position]="position" [baseZIndex]="10000">
+</p-confirmDialog>
+<div class="p-m-2">
+
+  <p-table [(contextMenuSelection)]="selectedConsultantDetails" [rowHover]="true" [contextMenu]="cm"
+    [value]="consultants" dataKey="consultant_id" [rows]="10" [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10,20,50]" [autoLayout]="true" [loading]="loading" [paginator]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} consultants"
+    (onRowExpand)="onRowExpand($event)" [resizableColumns]="true"
+    styleClass="p-datatable-responsive-demo p-datatable-striped p-datatable-customers p-datatable-gridlines">
+    <ng-template pTemplate="caption">
+
+
+      <div class="p-d-flex">
+        <button pButton label="Clear" class="p-button-outlined p-mr-4" icon="pi pi-filter-slash"
+          (click)="clear(dt1)"></button>
+        <div class=" p-d-flex p-ai-center p-jc-between">Download Center</div>
+
+
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Documents
+          </div>
+        </th>
+        <th *ngIf="isHeadhunterAdmin">
+
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Created By
+            <p-columnFilter type="text" field="user.name" display="menu"></p-columnFilter>
+          </div>
+
+        </th>
+        <th>
+
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Days in<br> Bench
+          </div>
+
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Name
+            <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+          </div>
+        </th>
+
+
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Email
+            <p-columnFilter type="text" field="consultant_email" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Phone Number
+            <p-columnFilter type="text" field="consultant_mobile_number" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Exp
+            <p-columnFilter type="numeric" field="experience" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+           Expected Rate
+            <p-columnFilter type="numeric" field="rate" display="menu" currency="USD"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Marketing Rate
+            <p-columnFilter type="numeric" field="expected_rate" display="menu" currency="USD"></p-columnFilter>
+          </div>
+        </th>
+
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Technology
+            <p-columnFilter field="technologies" matchMode="in" display="menu" [showMatchModes]="false"
+              [showOperator]="false" [showAddButton]="false">
+              <ng-template pTemplate="header">
+                <div class="p-px-3 p-pt-3 p-pb-0">
+                  <span class="p-text-bold">Choose Technology</span>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                <p-multiSelect [ngModel]="value" [options]="technologiesforflter" placeholder="Any"
+                  (onChange)="filter($event.value)" optionLabel="name">
+                  <ng-template let-option pTemplate="item">
+                    <div class="p-multiselect-representative-option">
+                      <span class="p-ml-1">{{option.name}}</span>
+                    </div>
+                  </ng-template>
+                </p-multiSelect>
+              </ng-template>
+            </p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Visa Type
+            <p-columnFilter type="text" field="visaType" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            City
+            <p-columnFilter type="text" field="city" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            State
+            <p-columnFilter type="text" field="state" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            SSN
+            <p-columnFilter type="numeric" field="state" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            linkedIn
+            <p-columnFilter type="numeric" field="linkedInUrl" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            skype
+            <p-columnFilter type="numeric" field="skypeId" display="menu"></p-columnFilter>
+          </div>
+        </th>
+
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Relocate
+            <p-columnFilter type="text" field="willingLocation" display="menu"></p-columnFilter>
+          </div>
+        </th>
+
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Status
+            <p-columnFilter field="consultant_status" matchMode="equals" display="menu">
+              <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)" placeholder="Any">
+                  <ng-template let-option pTemplate="item">
+                    <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                  </ng-template>
+                </p-dropdown>
+              </ng-template>
+            </p-columnFilter>
+          </div>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-consultant let-expanded="expanded">
+      <tr [pContextMenuRow]="consultant" [pSelectableRow]="consultant">
+        <td>
+          <button type="button" pButton pRipple [pRowToggler]="consultant"
+            class="p-button-text p-button-rounded p-button-plain"
+            [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+            *ngIf="consultant?.submissionscount"></button>
+
+        </td>
+        <td>
+
+
+          <span *ngIf="consultant.priority=='High'">
+            <button pTooltip="High Priority" tooltipPosition="bottom" pButton pRipple data-toggle="tooltip"
+              title="{{consultant.priority}} Priority" icon="pi pi-star" class=" p-button-rounded p-button-warning"
+              style="color:Green;background:#fff;border: none;"></button>
+          </span>
+          <span *ngIf="consultant.priority=='Medium'">
+            <button pButton pTooltip="Medium Priority" tooltipPosition="bottom" pRipple data-toggle="tooltip"
+              title="{{consultant.priority}} Priority" icon="pi pi-star" class=" p-button-rounded p-button-warning"
+              style="color:#ffc107;background:#fff;border: none;"></button>
+          </span>
+          <span *ngIf="consultant.priority=='Low'">
+            <button pButton pTooltip="Low Priority" tooltipPosition="bottom" pButton pRipple data-toggle="tooltip"
+              title="{{consultant.priority}} Priority" icon="pi pi-star" class=" p-button-rounded p-button-warning"
+              style="color:red;background:#fff;border: none;"></button>
+          </span>
+          <span> <a (click)="showModalDialog1(consultant.note)" tabindex="0" data-toggle="popover" data-trigger="focus"
+              title="" data-content="Note" data-original-title="Note"><img class="noteclass"
+                src="./assets/img/sticky.png"></a></span>
+
+          <a *ngIf="isHeadAdmin"><i class="pi pi-user-edit" (click)="showModalDialog(consultant)"
+              style="font-size: 1rem;color:#007bff;padding:10px;"></i></a>
+
+          <br>
+          <span>
+            <button data-toggle="tooltip" title="{{consultant?.submissionscount }} Submissions" class="btn-length"
+              style="color:white;background:#007bff;border:none">{{consultant?.submissionscount }}</button>
+          </span>
+          <span>
+            <button data-toggle="tooltip" title="{{consultant?.sclients}} Submitted to Client" class="btn-length"
+              style="color:white;background:purple;border:none">{{consultant?.sclients}}</button>
+          </span>
+          <span> <button data-toggle="tooltip" title="{{consultant?.interviews}} Interview Schedule" class="btn-length"
+              style="color:white;background:green;border:none">{{consultant?.interviews}}</button></span>
+
+
+        </td>
+        <td>
+          <span>
+            <a *ngIf="consultant.resume"
+            href="https://apiv2.webmobilez.com/storage/app/uploads/resume/{{consultant.resume}}"
+            pTooltip="Download Resume" target="_blank" download><i class="pi pi-cloud-download"
+              style="font-size: 21px"></i> </a>
+            <a *ngIf="consultant.resume" class="p-m-1"  pTooltip="View Resume" href="javascript:void(0);"
+              (click)="openDocNew(consultant.resume)"><img src="../../../../assets/img/word.png"></a>
+            <a *ngIf="consultant.otherDocument"  pTooltip="Download ID Card"
+              href="https://apiv2.webmobilez.com/storage/app/uploads/otherDocument/{{consultant.otherDocument}}"
+              target="_blank" download><img src="../../../../assets/img/idcard.png"></a>
+            <a class="p-m-1" *ngIf="consultant.workAuthorization"  pTooltip="Download Work Authorization"
+              href="https://apiv2.webmobilez.com/storage/app/uploads/workauthorization/{{consultant.workAuthorization}}"
+              target="_blank" download><img src="../../../../assets/img/suitcase.png"></a><br>
+
+            <span *ngIf="isHeadhunterAdmin">{{consultant?.user?.name}}</span>
+
+            <!--<span
+                style="color:#007bff;background:#fff;border:none">({{calculateDiff(consultant.created_at)}})</span><br> -->
+            {{consultant.created_at | date}}
+          </span>
+        </td>
+        <td>
+          {{calculateDiff(consultant.created_at)}}
+
+        </td>
+        <td>
+          {{consultant.name}}<br>
+
+        </td>
+
+        <td class="ui-resizable-column">
+          <span class="image-text">{{consultant.consultant_email}}</span>
+        </td>
+        <td>
+          {{consultant.consultant_mobile_number}}
+        </td>
+        <td>
+          {{consultant.experience}}
+        </td>
+        <td class="text-danger">
+         <strong>{{consultant.rate | currency:'USD':'symbol'}}</strong> 
+         
+        </td>
+        <td class="text-danger">
+          <strong> {{consultant.expected_rate | currency:'USD':'symbol'}}</strong>
+        </td>
+
+        <td>
+          <span class="image-text">{{consultant?.technologies?.name}}</span>
+        </td>
+        <td>
+          {{consultant.visaType }}
+        </td>
+        <td>
+          {{consultant.city }}
+        </td>
+        <td>
+          {{consultant.state }}
+        </td>
+        <td>
+          {{consultant.ssn}}
+        </td>
+        <td>
+          {{consultant.linkedInUrl}}
+        </td>
+        <td>
+          {{consultant.skypeId}}
+        </td>
+        <td>
+          {{consultant.willingLocation }}
+        </td>
+        <td>
+          <span
+            [class]="'customer-badge status-' + consultant.consultant_status">{{consultant.consultant_status}}</span>
+        </td>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-product>
+      <tr>
+        <td colspan="12">
+          <div class="p-p-3" *ngIf="product?.submissions">
+            <p-table [value]="product?.submissions" dataKey="id" [rows]="5" [showCurrentPageReport]="true"
+              [rowsPerPageOptions]="[5,10,20]" [resizableColumns]="true" [loading]="loading" [paginator]="true"
+              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Submissions"
+              styleClass="p-datatable-responsive-demo p-datatable-striped p-datatable-customers p-datatable-gridlines">
+              <ng-template pTemplate="header">
+      <tr>
+
+        <th pSortableColumn="user_details.name">Created By <p-sortIcon field="user_details.name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="contact_list.companies.name">Vendor Company <p-sortIcon
+            field="contact_list.companies.name">
+          </p-sortIcon>
+        </th>
+        <th pSortableColumn="contact_list.contactName">Vendor Contact Name <p-sortIcon field="contact_list.contactName">
+          </p-sortIcon>
+        </th>
+        <th pSortableColumn="clients.name">End Client <p-sortIcon field="clients.name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="submissionRate">Submission Rate<p-sortIcon field="submissionRate"></p-sortIcon>
+        </th>
+        <th pSortableColumn="submissionStatus">Submission Status<p-sortIcon field="submissionStatus"></p-sortIcon>
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-submission>
+      <tr>
+        <td>{{submission.user_details?.name}}</td>
+
+        <td>{{submission.contact_list?.companies?.name}}</td>
+
+        <td>{{submission.contact_list?.contactName}}</td>
+        <td>{{submission.clients?.name}}</td>
+        <td>{{submission.submissionRate}}</td>
+        <td>{{submission.submissionStatus}}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="12">There are no submissions for this Consultant yet.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+</td>
+</tr>
+</ng-template>
+</p-table>
+
+</div>
+<p-contextMenu #cm [model]="items"></p-contextMenu>
+<p-dialog header="Note" [(visible)]="displayModal1" [style]="{width: '50vw'}" [baseZIndex]="10000">
+  <p [innerHTML]="valuenote"></p>
+
+</p-dialog>
+<p-dialog header="Status Change" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}"
+  [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+  <form [formGroup]="registerVendor" (ngSubmit)="registerUser(consulatnt_id)">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label for="priority">Priority:</label>
+          <select class="form-control" formControlName="priority">
+            <option value="">--select--</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="form-group">
+          <label for="portal_status">Status of Consultant:</label>
+          <select class="form-control" formControlName="portal_status">
+            <option value="">--select--</option>
+            <option value="A">Active</option>
+            <option value="R">Removed From Webmobilez</option>
+            <option value="S">selected from WebmobileZ</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <div class="form-group">
+        <label for="notepop">Note:</label>
+
+        <p-editor formControlName="note" ></p-editor>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+</p-dialog>
+<p-dialog
+  header="Send Email - Candidate {{selectedConsultantDetails?.first_name}} {{selectedConsultantDetails?.last_name}}"
+  [(visible)]="sendmaildialog" [modal]="true" [style]="{width: '70vw'}">
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label>Choose Vendor Company:</label>
+              <p-dropdown [options]="vendors" #vendir (onChange)="ChangeVendor($event,vendir)"
+                [(ngModel)]="selectedVendors" optionLabel="name" optionValue='vendor_company_id'
+                [style]="{'width':'100%'}" placeholder="Select Vendor Company" crollHeight="400px" filter="true"
+                filterBy="name,vendor_company_id" resetFilterOnHide="true">
+              </p-dropdown>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row" *ngIf="vendir.value">
+          <div class="col-lg-6">
+            <label>Choose Contacts:</label>
+            <div class="form-group">
+              <p-dropdown #contactDetails [(ngModel)]="selectedcontacts" [options]="contacts" [style]="{'width':'100%'}"
+                (onChange)="ChangeContactsInner($event)" placeholder="Select Contact Details" scrollHeight="400px"
+                filter="true" filterBy="value,label" resetFilterOnHide="true">
+              </p-dropdown>
+            </div>
+          </div>
+        </div>
+        <form [formGroup]="sendEmailForm" (ngSubmit)="sendEmail()">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>To:</label><br>
+                <p-chips [addOnTab]="true" [addOnBlur]="true" [(ngModel)]="values" formControlName="values"></p-chips>
+              </div>
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Subject:</label>
+                <input type="text" [(ngModel)]="subjectValue" class="form-control" formControlName="subjectValue" />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Message:</label>
+                <p-editor [(ngModel)]="message" [style]="{'height':'320px'}" formControlName="message"></p-editor>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <div class="p-field-checkbox" *ngIf="selectedConsultantDetails?.resume">
+                  <p-checkbox name="group1" value="Resume" formControlName="resume"></p-checkbox>
+                  <label for="sf">Resume - {{selectedConsultantDetails?.resume}}</label>
+                </div>
+                <div class="p-field-checkbox" *ngIf="selectedConsultantDetails?.otherDocument">
+                  <p-checkbox name="group2" value="Work Authorization" formControlName="otherDocument"></p-checkbox>
+                  <label for="sf">ID Proof - {{selectedConsultantDetails?.otherDocument}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="update ml-auto mr-auto">
+              <button type="submit" class="btn btn-primary btn-round" [disabled]="senmails">Send Email</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</p-dialog>
+<p-dialog [(visible)]="resumeDialog" [style]="{width: '80vw'}" [baseZIndex]="10000" header="Talent Bench Details"
+  [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <ngx-doc-viewer [url]="doc" [viewer]="viewer" style="width:100%;height:80vh;"></ngx-doc-viewer>
+  </ng-template>
+
+</p-dialog>

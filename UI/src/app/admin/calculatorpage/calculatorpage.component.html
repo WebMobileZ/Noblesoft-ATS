@@ -1,0 +1,173 @@
+<div class="p-grid p-m-2">
+  <div class="p-col-4">
+    <mdb-card class="c1">
+      <mdb-card-body>
+        <mdb-card-title>
+          <h4>Marketing Rate(Vendor Rate)</h4>
+        </mdb-card-title>
+        <mdb-card-text>
+          <form id="userForm" method="post" name="percent_off">
+            <div class="row">
+              <div class="p-col-12 p-md-4">
+                <label class="control-label required" for="percent_off_p">Candidate Expected Rate</label>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">$</span>
+                    <input type="text" pInputText placeholder="Rate" class="form-control" value="52" [(ngModel)]="num1" [ngModelOptions]="{standalone: true}">
+
+                </div>
+                </div>
+            <!--  <div class="col-md-6">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                  </div>
+                  <input type="number" name="list" value="52" class="form-control" [(ngModel)]="num1"
+                    aria-label="Amount (to the nearest dollar)" >
+                </div>
+
+              </div> -->
+            </div>
+            <div class="row">
+              <div class="p-col-12 p-md-4">
+                <label class="control-label required" for="percent_off_p">Add Percent</label>
+                <div class="input-group mb-3">
+
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">%</span>
+                  </div>
+
+
+                  <select class="browser-default custom-select" name="disc" [(ngModel)]="num2" [ngModelOptions]="{standalone: true}">
+
+                  
+                  
+                    <option value="70">70</option>
+                    <option value="75">75</option>
+                    <option value="80">80</option>
+
+
+                  </select>
+                </div>
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <br>
+                  <button type="submit" id="percent_off_save" name="percent_off[save]"
+                    class="button btn-lg btn btn-primary btn-block btn">Calculate</button>
+                </div>
+
+              </div>
+            </div>
+          </form>
+          <div class="row ">
+            <div class="col-md-6">
+              <div class="form-group">
+                <div id="result" style="height: auto !important;">
+                 <h4> Marketing Rate : <label class="text-danger">{{ (100/ConvertToInt(num2))*ConvertToInt(num1) }}</label></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </mdb-card-text>
+      </mdb-card-body>
+    </mdb-card>
+  </div>
+  <div class="p-col-4">
+    <mdb-card class="c1">
+      <mdb-card-body>
+        <mdb-card-title>
+          <h4>Candidate Expected Rate</h4>
+        </mdb-card-title>
+        <mdb-card-text>
+          <form id="userForm1" method="post" name="percent_plus">
+            <div class="row">
+              <div class="p-col-12 p-md-4">
+                <label class="control-label required" for="percent_off_p">Vendor Rate</label>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">$</span>
+                    <input type="text" pInputText placeholder="Rate" class="form-control" value="52" [(ngModel)]="num3" [ngModelOptions]="{standalone: true}">
+
+                </div>
+                </div>
+            <!--  <div class="col-md-6">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">$</span>
+                  </div>
+                  <input type="number" name="list" value="52" class="form-control" [(ngModel)]="num1"
+                    aria-label="Amount (to the nearest dollar)" >
+                </div>
+
+              </div> -->
+            </div>
+            <div class="row">
+              <div class="p-col-12 p-md-4">
+                <label class="control-label required" for="percent_off_p">Deduct Percent</label>
+                <div class="input-group mb-3">
+
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon12">%</span>
+                  </div>
+
+
+                  <select class="browser-default custom-select" name="disc" [(ngModel)]="num4" [ngModelOptions]="{standalone: true}">
+
+                  
+                  
+                    <option value="70">70</option>
+                    <option value="75">75</option>
+                    <option value="80">80</option>
+
+
+                  </select>
+                </div>
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <br>
+                  <button type="submit" id="percent_plus_save" name="percent_plus[save]"
+                    class="button btn-lg btn btn-primary btn-block btn">Calculate</button>
+                </div>
+
+              </div>
+            </div>
+          </form>
+          <div class="row ">
+            <div class="col-md-6">
+              <div class="form-group">
+                <div id="result" style="height: auto !important;" >
+                 <h4> Candidate Rate : <label class="text-danger"> {{((ConvertToInt(num4)/100)*ConvertToInt(num3)) }}</label></h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </mdb-card-text>
+      </mdb-card-body>
+    </mdb-card>
+  </div>
+<div  class="p-col-2">
+
+</div>
+  <div class="p-col-2">
+
+    <mdb-card class="c1">
+      <mdb-card-body>
+        <mdb-card-title>
+          <h4>Calculator</h4>
+        </mdb-card-title>
+        <mdb-card-text>
+          <ng-calculator></ng-calculator>
+
+        </mdb-card-text>
+      </mdb-card-body>
+    </mdb-card>
+  </div>
+</div>

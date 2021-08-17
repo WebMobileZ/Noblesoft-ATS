@@ -1,0 +1,135 @@
+
+<div class="p-grid p-ai-stretch vertical-container p-m-2">
+  <div class="p-md-8">
+    <p-card header="New User">
+      <form [formGroup]="registerForm" (ngSubmit)="registerUser()">
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col-12">
+
+              <label>Name</label>
+              <input type="text" formControlName="name" class="form-control" placeholder="Name" required>
+              <div *ngIf="name.invalid && (name.dirty || name.touched)" class="form-text text-muted">
+                <div *ngIf="name.errors?.required">
+                  Name is required.
+                </div>
+                <div *ngIf="name.errors?.minlength">
+                  Name must be at least 5 characters long.
+                </div>
+              </div>
+              <small id="emailHelp" class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.name }}</small>
+
+
+        </div>
+        <div class="p-field p-col-12">
+
+              <label for="exampleInputEmail1">Email address</label>
+              <input type="email" formControlName="email" class="form-control" placeholder="Email" required>
+
+              <div *ngIf="email.invalid && (email.dirty || email.touched)" class="form-text text-muted">
+                <div *ngIf="email.errors?.required">
+                  Email is required.
+                </div>
+                <div *ngIf="email.errors?.email">
+                  Invalid email address.
+                </div>
+              </div>
+
+              <small id="emailHelp" class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.email }}</small>
+
+          </div>
+        </div>
+
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col-12">
+
+              <label>Role</label>
+              <select #rolewise formControlName="role" class="form-control">
+                <option value="null">Choose Role</option>
+                <option value="admin"> Admin</option>
+                <option value="bdm"> Business Development Manager</option>
+                <option value="accountmanager">Account Manager</option>
+                <option value="a-b-manager">Account Manager/Business development Manager</option>
+                <option value="recruiter">IT Recruiter</option>
+                <option value="head-hunters">Head Hunters</option>
+                <option value="adminhunters">Head Hunters Admin</option>
+                <option value="sales-lead">Sales Lead</option>
+                <option value="bench-sales">Bench sales Lead</option>
+                <option value="jr-bench-sales">Bench sales</option>
+              </select>
+              <div *ngIf="role.invalid && (role.dirty || role.touched)" class="form-text text-muted">
+                <div *ngIf="role.errors?.required">
+                  Role is required.
+                </div>
+
+              </div>
+              <small id="roleHelp" class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.role }}</small>
+
+
+          </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid"  *ngIf="rolewise.value=='bench-sales'">
+          <div class="p-field p-col">
+            <label>Assign To:</label>
+            <p-multiSelect formControlName="assigns" [showClear]="true" defaultLabel="Choose Assigners" [options]="jrrecruiters"
+               optionLabel="name" optionValue="id" display="chip"></p-multiSelect>
+          </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid"  *ngIf="(rolewise.value=='accountmanager')||(rolewise.value=='bdm')">
+          <div class="p-field p-col">
+            <label>Assign To:</label>
+            <p-multiSelect formControlName="assigns" [showClear]="true" defaultLabel="Choose Assigners" [options]="jrritecruiters"
+               optionLabel="name" optionValue="id" display="chip"></p-multiSelect>
+          </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+          <div class="p-field p-col-12">
+
+              <label>Password</label>
+              <input type="password" formControlName="password" class="form-control" placeholder="Password" required>
+
+              <div *ngIf="password.invalid && (password.dirty || password.touched)" class="form-text text-muted">
+                <div *ngIf="password.errors?.required">
+                  Password is required.
+                </div>
+                <div *ngIf="password.errors?.minlength">
+                  Password must be at least 5 characters long.
+                </div>
+              </div>
+
+              <small id="emailHelp" class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.password
+                }}</small>
+            </div>
+
+
+        <div class="p-field p-col-12">
+              <label>Confirm Password</label>
+              <input type="password" formControlName="confirm_password" class="form-control"
+                placeholder="Confirm Password" required>
+
+              <div *ngIf="confirm_password.invalid && (confirm_password.dirty || confirm_password.touched)"
+                class="form-text text-muted">
+                <div *ngIf="confirm_password.errors?.required">
+                  Confirm Password is required.
+                </div>
+                <div *ngIf="confirm_password.errors?.minlength">
+                  Confirm Password must be at least 5 characters long.
+                </div>
+              </div>
+
+              <small id="emailHelp" class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.confirm_password
+                }}</small>
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="update ml-auto mr-auto">
+            <button type="submit" class="btn btn-primary btn-round" [disabled]="!registerForm.valid">Register
+              User</button>
+          </div>
+        </div>
+      </form>
+    </p-card>
+
+  </div>
+</div>

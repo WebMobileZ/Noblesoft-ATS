@@ -1,0 +1,292 @@
+<p-toast></p-toast>
+<!-- prime table-->
+<div class="p-grid p-m-2">
+  <div class="p-col">
+    <!-- <p-messages [value]="msgs"></p-messages> -->
+    <p-table #dt1 [value]="submissions" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[10,20,50]" [loading]="loading" [rowHover]="true" [autoLayout]="true " [filterDelay]="0"
+      [globalFilterFields]="['consultatName']" [reorderableColumns]="true"
+      styleClass="p-datatable-consultants  p-datatable-gridlines " [paginator]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Submissions"
+      [globalFilterFields]="['user_details.name','submissionStatus','consultant.consultatName','']"   [lazy]="true" (onLazyLoad)="loadData($event)" [totalRecords]="totalRecords">
+
+      <ng-template pTemplate="caption">
+
+        <div class="p-d-flex">
+          <button pButton label="Clear" class="p-button-outlined p-mr-4" icon="pi pi-filter-slash"
+            (click)="clear(dt1)"></button>
+          <div class=" p-d-flex p-ai-center p-jc-between">Submissions List ({{totalRecords}})</div>
+
+          <span class="p-input-icon-left p-ml-auto">
+            <p-dropdown styleClass="p-mr-4" (onChange)="searchBenchList()" placeholder="Bench Sales"
+              [(ngModel)]="employeeFilter" [options]="employees" optionLabel="name" optionValue="id"  [style]="{'width':'110px'}" scrollHeight="400px" filter="true" filterBy="name,id" resetFilterOnHide="true" *ngIf="isAdmin" >
+            </p-dropdown>
+            <p-dropdown styleClass="p-mr-4" (onChange)="searchBenchList()" [options]="submissiontypes"
+              [(ngModel)]="submissionfilter" filter="true" filterBy="value,label" resetFilterOnHide="true">
+            </p-dropdown>
+
+            <p-dropdown styleClass="p-mr-4" (onChange)="searchBenchList()" placeholder="Submission Status"
+              [(ngModel)]="submissionfilterstatus" filter="true" filterBy="value,label" [options]="filterstatuses"
+              optionLabel="label" optionValue="value">
+            </p-dropdown>
+
+            <!--     <p-dropdown styleClass="p-mr-4" placeholder="Hotlist Filter" [options]="hotlistfilter"  [(ngModel)]="submissionfilterHotlist" optionLabel="name"
+          optionValue="value">
+        </p-dropdown> -->
+            <!-- <button pButton pRipple label="Search" (click)="searchBenchList()" icon="pi pi-search"
+            class="p-mr-4 p-button-primary p-mr-2"></button> -->
+          </span>
+
+          <a pButton [routerLink]="[ '/submissions/create' ]" pRipple label="New Submission" icon="pi pi-plus"
+            class="p-button-success p-mr-2"></a>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Action
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Created By
+              <p-columnFilter type="text" field="user_details.name" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Consultant Name
+              <p-columnFilter type="text" field="consultant.consultatName" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Status
+              <p-columnFilter field="submissionStatus" matchMode="equals" display="menu">
+                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                  <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)"
+                    placeholder="Any">
+                    <ng-template let-option pTemplate="item">
+                      <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                    </ng-template>
+                  </p-dropdown>
+                </ng-template>
+              </p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Technology
+              <p-columnFilter type="text" field="consultant.technologies.name" display="menu"></p-columnFilter>
+            </div>
+          </th>
+
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Company Name
+              <p-columnFilter type="text" field="contact_list.companies.name" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Contact Name
+              <p-columnFilter type="text" field="contact_list.contactName" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Contact Email
+              <p-columnFilter type="text" field="contact_list.contactEmail" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Contact Mobile
+              <p-columnFilter type="text" field="contact_list.contactEmail" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              End Client
+              <p-columnFilter type="text" field="clients.name" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+            Location
+              <p-columnFilter type="text" field="consultant.endClientLocation" display="menu"></p-columnFilter>
+            </div>
+          </th>
+
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Actual Rate
+              <p-columnFilter type="text" field="consultant.actualRate" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Submission Rate
+              <p-columnFilter type="text" field="consultant.submissionRate" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Schedule Date
+              <p-columnFilter type="text" field="scheduleDate" display="menu"></p-columnFilter>
+            </div>
+          </th>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-consultant let-expanded="expanded">
+        <tr>
+          <td>
+            <span><button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+              (click)="editProduct(consultant)"></button></span> 
+            <!-- <button pButton pRipple icon="pi pi-trash"  class="p-button-rounded p-button-warning"
+          (click)="deleteProduct($event,consultant)"></button> -->
+         <span *ngIf="consultant.comments">
+          <a (click)="showModalDialog1(consultant.comments)" tabindex="0" data-toggle="popover" data-trigger="focus"
+          title="" data-content="Note" data-original-title="Note"><img class="noteclass"
+            src="./assets/img/sticky.png"></a>
+
+         </span> 
+          </td>
+          <td>
+            <span>{{consultant?.user_details?.name}}<br>
+              {{consultant.created_at | date}}</span>
+          </td>
+          <td>
+            {{consultant?.consultant?.consultatName}}
+          </td>
+
+          <td>
+            {{consultant.submissionStatus}}
+          </td>
+
+          <td>
+            {{consultant?.consultant?.technologies?.name}}
+          </td>
+          <td>
+            {{consultant.contact_list?.companies.name}}
+          </td>
+          <td>
+            {{consultant.contact_list?.contactName}}
+          </td>
+          <td>
+            {{consultant.contact_list?.contactEmail}}
+          </td>
+          <td>
+            {{consultant.contact_list?.contactMobile}}
+          </td>
+          <td>
+            {{consultant.clients?.name}}
+          </td>
+          <td>
+            {{consultant.endClientLocation}}
+          </td>
+
+          <td>
+            {{consultant.actualRate | currency:'USD':'symbol'}}
+          </td>
+          <td>
+            {{consultant.submissionRate | currency:'USD':'symbol'}}
+          </td>
+          <td>
+            <div *ngIf="consultant.scheduleDate">{{consultant.scheduleDate | date}}</div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">No Submissions found.</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+
+</div>
+<p-dialog [(visible)]="consultantDialog" [style]="{width: '50vw'}" [baseZIndex]="10000" header="{{heading1}}"
+  [modal]="true" styleClass="p-fluid">
+
+  <ng-template pTemplate="content">
+    <form [formGroup]="consultantForm" (ngSubmit)="updateConsultantDetails()" enctype="multipart/form-data">
+
+
+
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="form-group">
+            <label for="popstatus">Status:</label>
+
+            <select class="form-control" #seleectevalue formControlName="submissionStatus">
+              <option value="">--select--</option>
+              <option value="Placed">Placed</option>
+              <option value="Interview scheduled">Interview scheduled</option>
+              <option value="Submitted to Client">Submitted to Client</option>
+              <option value="Submitted to Vendor">Submitted to Vendor</option>
+              <option value="Disqualified">Disqualified</option>
+              <option value="Client rejected">Client rejected</option>
+              <option value="Vendor Rejected">Vendor Rejected</option>
+              <option value="Vendor screening call">Vendor screening call</option>
+              <option value="Waiting for Evaluation">Waiting for Evaluation</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-8" *ngIf="seleectevalue.value == 'Interview scheduled'">
+          <div class="form-group schedulepopdiv">
+            <label for="schedulepop">Schedule Date:</label>
+            <input type="date" class="form-control" formControlName="scheduleDate"><br>
+          </div>
+        </div>
+        <div class="col-lg-4" *ngIf="seleectevalue.value == 'Interview scheduled'">
+          <div class="form-group schedulepopdiv">
+            <label for="timezone">Time Zone:</label>
+            <select class="form-control" formControlName="timezone">
+              <option value="">Choose Time Zone</option>
+              <option value="EST">EST</option>
+              <option value="PST">PST</option>
+              <option value="CST">CST</option>
+              <option value="MST">MST</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="form-group">
+            <label for="notepop">Comment:</label>
+            <textarea class="form-control" formControlName="comments"></textarea>
+
+          </div>
+        </div>
+      </div>
+      <div class="p-field">
+
+
+        <button type="submit" class="btn btn-primary btn-round"
+          [disabled]="!consultantForm.valid">{{submissionButton}}</button>
+      </div>
+
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+
+  </ng-template>
+
+
+</p-dialog>
+
+
+
+
+<p-confirmDialog [style]="{width: '50vw'}" key="positionDialog" [position]="position" [baseZIndex]="10000">
+</p-confirmDialog>
+<p-confirmPopup></p-confirmPopup>
+<p-dialog header="Note" [(visible)]="displayModal1" [style]="{width: '50vw'}" [baseZIndex]="10000">
+  <p [innerHTML]="valuenote"></p>
+
+</p-dialog>

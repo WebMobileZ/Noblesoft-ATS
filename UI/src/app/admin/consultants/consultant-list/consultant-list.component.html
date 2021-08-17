@@ -1,0 +1,658 @@
+<p-toast></p-toast>
+<!-- prime table-->
+
+<div class="p-grid p-m-2">
+  <div class="p-col">    
+    <!-- <p-messages [value]="msgs"></p-messages> -->
+    <p-table #dt1 [value]="consultants" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+      [rowsPerPageOptions]="[10,15,50]" [loading]="loading" [rowHover]="true" [autoLayout]="true " [filterDelay]="0"
+      [globalFilterFields]="['consultatName']" [reorderableColumns]="true"
+      styleClass="p-datatable-consultants  p-datatable-gridlines p-datatable-sm" [paginator]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} consultants"
+      [globalFilterFields]="['name','user.name','technology.name','consultant_status']">
+
+      <ng-template pTemplate="caption">
+
+        <div class="p-d-flex">
+          <button pButton label="Clear" class="p-button-outlined p-mr-4" icon="pi pi-filter-slash"
+            (click)="clear(dt1)"></button>
+          <div class=" p-d-flex p-ai-center p-jc-between">Talent Bench</div>
+          <div class="p-input-icon-left p-ml-auto">
+            <span *ngIf="isHeadhunterAdmin">
+
+              <p-dropdown styleClass="p-mr-4" (onChange)="searchConsultant($event)" placeholder="Submission Filter"
+                [(ngModel)]="submissionfilter" [options]="submissiontypes" optionLabel="name" optionValue="value">
+              </p-dropdown>
+              <p-dropdown #changeusertypevalue styleClass="p-mr-4" (onChange)="changeUserType($event)" placeholder="Choose Headhunter/ Recruiter"
+              [(ngModel)]="changeUserFilter"  [options]="usersTypes" optionLabel="name" optionValue="id" [style]="{'width':'110px'}" scrollHeight="400px" >
+             </p-dropdown>
+              <p-dropdown styleClass="p-mr-4" (onChange)="searchConsultant($event)" placeholder="Filter by User"
+              [(ngModel)]="employeeFilter" [options]="employees" optionLabel="name" optionValue="id" [style]="{'width':'110px'}" scrollHeight="400px" filter="true"
+              filterBy="name,id" resetFilterOnHide="true" *ngIf="changeusertypevalue.value" >
+             </p-dropdown>
+
+             <p-dropdown styleClass="p-mr-4" (onChange)="searchConsultant($event)" placeholder="Technology"
+                [(ngModel)]="technologyFilters" [options]="technologiesforflter" optionLabel="name"
+                optionValue="technology_id" [style]="{'width':'110px'}" scrollHeight="400px" filter="true"
+                filterBy="name,technology_id" resetFilterOnHide="true" >
+              </p-dropdown>
+
+              <p-dropdown styleClass="p-mr-4" (onChange)="searchConsultant($event)" placeholder="Consultant Status"
+                [(ngModel)]="submissionfilterstatus" [options]="consultantsstatus" optionLabel="label"
+                optionValue="value" >
+              </p-dropdown>
+              <p-dropdown styleClass="p-mr-4" (onChange)="searchConsultant($event)"
+              [(ngModel)]="hotliststatus" [options]="hotliststatuslist" optionLabel="label"
+              optionValue="value" >
+            </p-dropdown>
+            </span>
+          </div>
+          <button pButton pRipple label="Add Candidate" icon="pi pi-plus" class="p-button-success p-mr-2"
+            (click)="openNew()"></button>
+          
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Action
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Documents / Created
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Name
+              <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Tax Type
+              <p-columnFilter type="text" field="tax_type" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+             Job Title
+              <p-columnFilter type="text" field="with_jobs.job_title" display="menu"></p-columnFilter>
+            </div>
+          </th>
+
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Email
+              <p-columnFilter type="text" field="consultant_email" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Phone Number
+              <p-columnFilter type="text" field="consultant_email" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Technology
+              <p-columnFilter field="technologies" matchMode="in" display="menu" [showMatchModes]="false"
+                [showOperator]="false" [showAddButton]="false">
+                <ng-template pTemplate="header">
+                  <div class="p-px-3 p-pt-3 p-pb-0">
+                    <span class="p-text-bold">Choose Technology</span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                  <p-multiSelect [ngModel]="value" [options]="technologiesforflter" placeholder="Any"
+                    (onChange)="filter($event.value)" optionLabel="name">
+                    <ng-template let-option pTemplate="item">
+                      <div class="p-multiselect-representative-option">
+                        <span class="p-ml-1">{{option.name}}</span>
+                      </div>
+                    </ng-template>
+                  </p-multiSelect>
+                </ng-template>
+              </p-columnFilter>
+            </div>
+          </th>
+
+
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Visa Type
+              <p-columnFilter type="text" field="visaType" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+            Expected Rate
+              <p-columnFilter type="numeric" field="rate" display="menu" currency="USD"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+            Marketing  Rate
+              <p-columnFilter type="numeric" field="expected_rate" display="menu" currency="USD"></p-columnFilter>
+            </div>
+          </th>
+         
+          
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Experience
+              <p-columnFilter type="numeric" field="experience" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              SSN
+              <p-columnFilter type="numeric" field="state" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              City
+              <p-columnFilter type="text" field="city" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              State
+              <p-columnFilter type="text" field="state" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Status
+              <p-columnFilter field="consultant_status" matchMode="equals" display="menu">
+                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                  <p-dropdown [ngModel]="value" [options]="statuses" (onChange)="filter($event.value)"
+                    placeholder="Any">
+                    <ng-template let-option pTemplate="item">
+                      <span [class]="'customer-badge status-' + option.value">{{option.label}}</span>
+                    </ng-template>
+                  </p-dropdown>
+                </ng-template>
+              </p-columnFilter>
+            </div>
+          </th>
+          <!-- <th>
+              <div class="p-d-flex p-jc-between p-ai-center">
+                Activity
+                <p-columnFilter field="activity" matchMode="between" display="menu" [showMatchModes]="false"
+                  [showOperator]="false" [showAddButton]="false">
+                  <ng-template pTemplate="filter" let-filter="filterCallback">
+                    <p-slider [ngModel]="activityValues" [range]="true" (onSlideEnd)="filter($event.values)"
+                      styleClass="p-m-3"></p-slider>
+                    <div class="p-d-flex p-ai-center p-jc-between p-px-2">
+                      <span>{{activityValues[0]}}</span>
+                      <span>{{activityValues[1]}}</span>
+                    </div>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th> -->
+          <!--  <th style="width: 8rem">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Verified
+              <p-columnFilter type="boolean" field="verified" display="menu"></p-columnFilter>
+            </div>
+          </th> -->
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-consultant let-expanded="expanded">
+        <tr [ngStyle]="{'background-color':getColor(consultant?.consultant_status,consultant?.admin_status)}">
+
+          <td>
+            <!--  <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+          (click)="deleteProduct(consultant)"></button> -->
+            <span *ngIf="isHeadhunterAdmin==true">
+              <button pButton pTooltip="Edit Consultant" tooltipPosition="bottom" pRipple icon="pi pi-pencil"
+                class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(consultant)"></button>
+              <button *ngIf="consultant.admin_status=='D'" pTooltip="Submit to Admin" tooltipPosition="bottom" pRipple
+                pButton type="button" icon="pi pi-thumbs-up" (click)="confirm($event,'A',consultant.consultant_id);"
+                class="p-button-rounded p-button-text "></button>
+              <button *ngIf="consultant.admin_status=='A'" pRipple pButton type="button" icon="pi pi-thumbs-down"
+                (click)="confirm($event,'D',consultant.consultant_id);"
+                class="p-button-rounded p-button-text "></button>
+            </span>
+
+            <span *ngIf="isHeadhunter==true">
+              <button *ngIf="consultant.user_status=='u'" pButton pRipple icon="pi pi-pencil"
+                class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(consultant)"></button>
+              <button *ngIf="consultant.user_status=='u'" pRipple pButton type="button" icon="pi pi-thumbs-up"
+                (click)="confirmHunterStatus($event,'p',consultant.consultant_id);"
+                class="p-button-rounded p-button-text "></button>
+              <button *ngIf="consultant.user_status=='p'" pRipple pButton type="button" icon="pi pi-check"
+                class="p-button-rounded p-button-text "></button>
+            </span>
+            <span *ngIf="isRecruiter==true">
+              <button *ngIf="consultant.user_status=='u'" pButton pRipple icon="pi pi-pencil"
+                class="p-button-rounded p-button-success p-mr-2" (click)="editProduct(consultant)"></button>
+                <button *ngIf="consultant.user_status=='u'" pRipple pButton type="button" icon="pi pi-thumbs-up"
+                (click)="confirmHunterStatus($event,'p',consultant.consultant_id);"
+                class="p-button-rounded p-button-text "></button>
+              <button *ngIf="consultant.user_status=='p'" pRipple pButton type="button" icon="pi pi-check"
+                class="p-button-rounded p-button-text "></button>
+
+            </span>
+          </td>
+          <td>
+
+            <span>
+              <!--<a *ngIf="consultant.resume"
+                href="https://apiv2.webmobilez.com/storage/app/uploads/resume/{{consultant.resume}}" target="_blank"
+                download><img src="../../../../assets/img/word.png"></a> -->
+                <a *ngIf="consultant.resume"
+                    href="https://apiv2.webmobilez.com/storage/app/uploads/resume/{{consultant.resume}}"
+                    pTooltip="Download Resume" target="_blank" download><i class="pi pi-cloud-download"
+                      style="font-size: 21px"></i> </a>
+                <a  *ngIf="consultant.resume" pTooltip="View Resume"  class="p-m-1" href="javascript:void(0);" (click)="openDocNew(consultant.resume)" ><img src="../../../../assets/img/word.png"></a>
+
+              <a  *ngIf="consultant.otherDocument" pTooltip="Download ID Card"
+                href="https://apiv2.webmobilez.com/storage/app/uploads/otherDocument/{{consultant.otherDocument}}"
+                target="_blank" download><img src="../../../../assets/img/idcard.png"></a>
+              <a class="p-m-1" *ngIf="consultant.workAuthorization" pTooltip="Download Work Authorization"
+                href="https://apiv2.webmobilez.com/storage/app/uploads/workauthorization/{{consultant.workAuthorization}}"
+                target="_blank" download><img src="../../../../assets/img/suitcase.png"></a><br>
+                {{consultant.created_at | date}}<br>
+                <strong>{{consultant?.user?.name}}</strong>
+             </span>
+          </td>
+          <td>
+            {{consultant.name}}
+          </td>
+          <td>
+            {{consultant.tax_type}}
+          </td>
+          <td>
+            {{consultant.with_jobs?.job_title}}<br>
+           <strong>{{consultant.with_jobs?.user?.name}}</strong>
+          </td>
+
+          <td class="ui-resizable-column">
+            <span class="image-text">{{consultant.consultant_email}}</span>
+          </td>
+          <td>
+            {{consultant.consultant_mobile_number}}
+          </td>
+          <td>
+            <span class="image-text">{{consultant.technologies?.name}}</span>
+          </td>
+          <td>
+            {{consultant.visaType }}
+          </td>
+          <td class="text-danger">
+            <strong>  {{consultant.rate | currency:'USD':'symbol'}}</strong>
+          </td>
+          <td class="text-danger">
+            <strong> {{consultant.expected_rate | currency:'USD':'symbol'}}</strong>
+          </td>
+         
+          <td>
+            {{consultant.experience}}
+          </td>
+          <td>
+            {{consultant.ssn}}
+          </td>
+          <td>
+            {{consultant.city}}
+          </td>
+          <td>
+            {{consultant.state}}
+          </td>
+          <td>
+            <span
+              [class]="'customer-badge status-' + consultant.consultant_status">{{consultant.consultant_status}}</span>
+          </td>
+          <!-- <td>
+              <p-progressBar [value]="customer.activity" [showValue]="false"></p-progressBar>
+            </td> -->
+          <!--   <td class="p-text-center">
+          <i class="pi"
+              [ngClass]="{'true-icon pi-check-circle': customer.verified, 'false-icon pi-times-circle': !customer.verified}"></i>
+          </td> -->
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">No Consultants found.</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+
+  </div>
+</div>
+<p-dialog [(visible)]="consultantDialog" [style]="{width: '80vw'}" [baseZIndex]="10000" header="Talent Bench Details"
+  [modal]="true" styleClass="p-fluid">
+
+  <ng-template pTemplate="content">
+   
+    <form [formGroup]="consultantForm" id="consultantForm" (ngSubmit)="updateConsultantDetails()"
+      enctype="multipart/form-data">
+  
+      <div class="p-fluid p-formgrid p-grid" >
+        <div class="p-field p-col">
+          <label for="job">Candidate Type:</label>
+          <p-selectButton [options]="consultanttypes"  (onChange)="onChangeType($event.value)"   [(ngModel)]="selectedCity" formControlName="consultant_type"></p-selectButton>
+         </div>
+  
+      <div class="p-field p-col" *ngIf="!hideFields">
+        <label for="job">Tax Type:</label>
+
+        <p-dropdown #taxttypevalue placeholder="Choose Tax Type" [(ngModel)]="selectTaxType" [options]="taxtypes" optionValue="value" optionLabel="label"
+          formControlName="tax_type" [style]="{'width':'100%'}"  >
+        </p-dropdown>
+
+      </div>
+      <div class="p-field p-col" *ngIf="(selectTaxType=='C2C')&&!hideFields">
+        <label for="firstname1">Vendor Company Name:</label>
+        <input type="text" pInputText  formControlName="vendor_company_name"
+          pTooltip="Enter Vendor Company Name" />
+
+      </div>
+      <div class="p-field p-col" *ngIf="(selectTaxType=='C2C')&&!hideFields">
+        <label for="firstname1">Company Email:</label>
+        <input type="email" pInputText id="email" formControlName="company_email" />
+      </div>
+      <div class="p-field p-col" *ngIf="(selectTaxType=='C2C')&&!hideFields">
+        <label for="firstname1">Company Mobile Number:</label>
+
+        <p-inputMask formControlName="company_mobile_number" mask="(999) 999-9999? x99999"></p-inputMask>
+
+      </div>
+     
+        <div class="p-field p-col" *ngIf="!hideFields">
+          <label for="job">Assign Job Posting:</label>
+          <!-- <p-dropdown [options]="technologies" formControlName="technology_id" optionLabel="name"
+                optionValue="technology_id">
+              </p-dropdown> -->
+          <p-dropdown placeholder="Choose Job" [options]="jobs" optionValue="job_id" optionLabel="job_title"
+            formControlName="job_id" [style]="{'width':'100%'}" scrollHeight="400px" filter="true"
+            filterBy="job_title,job_id" resetFilterOnHide="true">
+          </p-dropdown>
+
+        </div>
+      
+       
+
+
+
+        <!-- <p-dropdown [options]="technologies" formControlName="technology_id" optionLabel="name"
+              optionValue="technology_id">
+            </p-dropdown> -->
+
+
+
+      </div>
+
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col">
+          <label for="firstname1"><span class="color-red">* </span>First Name:</label>
+          <input type="text" pInputText id="first_name" formControlName="first_name" pTooltip="Enter your First Name" />
+          <small class="p-invalid" *ngIf="submitted && !first_name">First Name is Required</small>
+        </div>
+        <div class="p-field p-col">
+          <label for="lastname1"><span class="color-red">*</span>Last Name:</label>
+          <input type="text" pInputText id="name" formControlName="last_name" />
+          <small class="p-invalid" *ngIf="submitted && !last_name">Last Name is Required</small>
+        </div>
+        <div class="p-field p-col" >
+          <label for="firstname1"><span class="color-red">* </span>Email:</label>
+          <input type="email" pInputText id="email" formControlName="consultant_email" />
+          <small class="p-invalid" *ngIf="submitted && !consultant_email">Email is Required</small>
+          <small class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.consultant_email }}</small>
+        </div>
+     
+        <div class="p-field p-col" *ngIf="!hideFields">
+          <label for="consultant_mobile_number"><span class="color-red">*</span>Mobile Number:</label>
+          <p-inputMask formControlName="consultant_mobile_number" mask="(999) 999-9999"></p-inputMask>
+          <small class="p-invalid" *ngIf="submitted && !consultant_mobile_number">Mobile Number is Required</small>
+        </div>
+           
+        <div class="p-field p-col">
+          <label for="firstname1"><span class="color-red">*</span> Technology :</label>
+
+            <div class="p-inputgroup">
+              <button type="button" (click)="openTechnology()" pButton pRipple icon="pi pi-plus"
+                styleClass="p-button-info"></button>
+
+              <p-dropdown placeholder="Choose Technology" optionValue="technology_id" [options]="technologies"
+                formControlName="technology_id" [style]="{'width':'100%'}" scrollHeight="400px" filter="true"
+                filterBy="name,technology_id" resetFilterOnHide="true">
+              </p-dropdown>
+            </div>
+
+
+
+          <div *ngIf="technology_id.invalid && (technology_id.dirty || technology_id.touched)"
+            class="form-text text-muted">
+            <div *ngIf="technology_id.errors?.required">
+              Technology is required.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid p-grid" *ngIf="!hideFields">
+
+        <div class="p-field p-col-3">
+          <label for="Visa"><span class="color-red">* </span>Visa Type:</label>
+          <p-dropdown placeholder="Choose Visa Type" [options]="visaTypes" formControlName="visaType" optionLabel="name"
+            optionValue="value">
+          </p-dropdown>
+          <small class="p-invalid" *ngIf="submitted && !last_name">VISA is Required</small>
+        </div>
+        <div class="p-field p-col-3">
+          <label for="experience"><span class="color-red">* </span>Experience:</label>
+          <p-dropdown placeholder="Choose Experience" [options]="experiencesstatus" formControlName="experience"
+            [style]="{'width':'100%'}" scrollHeight="400px" optionLabel="name" optionValue="value"></p-dropdown>
+
+          <small class="p-invalid" *ngIf="submitted && !experience">Exp is Required</small>
+        </div>
+        <div class="p-field p-col-2">
+          <label for="price"><span class="color-red">* </span>Expected Rate:</label>
+          <p-inputNumber id="price"  (onInput)="onchangeRate($event.value);" formControlName="rate" mode="currency" currency="USD" locale="en-US">
+          </p-inputNumber>
+          <small class="p-invalid" *ngIf="submitted && !rate">Required</small>
+        </div>
+        <div class="p-field p-col-2">
+          <label for="price"><span class="color-red">* </span>Add Percent:</label>
+          <select class="browser-default custom-select" (change)="onchangepercentytpe($event.target.value);" name="disc" [(ngModel)]="num2" [ngModelOptions]="{standalone: true}">    
+            <option value="">-Percent Type-</option>
+            <option value="70">70</option>
+            <option value="75">75</option>
+            <option value="80">80</option>
+          </select>
+        </div>
+        <div class="p-field p-col-2">
+          <label for="expected_rate">Marketing Rate:</label>
+          <p-inputNumber id="expected_rate" formControlName="expected_rate" mode="currency" currency="USD" locale="en-US">
+          </p-inputNumber>
+
+        </div>
+      </div>
+
+      <div class="p-fluid p-formgrid p-grid" *ngIf="!hideFields">
+        <div class="p-field p-col-4">
+          <label for="ssn"><span class="color-red">* </span>Last 4 Digit SSN:</label>
+
+          <input type="text" formControlName="ssn" pInputText class="p-inputtext-sm" placeholder="SSN" [maxlength]="4">
+          <small class="p-invalid" *ngIf="submitted && !ssn">SSN is Required</small>
+        </div>
+        <div class="p-field p-col-4">
+          <label for="city"><span class="color-red">* </span>City:</label>
+          <input type="text" pInputText id="city" formControlName="city" />
+          <small class="p-invalid" *ngIf="submitted && !city">City is Required</small>
+        </div>
+        <div class="p-field p-col-4">
+          <label for="state"><span class="color-red">* </span>State:</label>
+          <p-dropdown placeholder="Choose State" [options]="states" formControlName="state" optionLabel="name"
+            optionValue="value">
+          </p-dropdown>
+          <small class="p-invalid" *ngIf="submitted && !state">State is Required</small>
+        </div>
+
+
+      </div>
+
+      <div class="p-fluid p-formgrid p-grid" *ngIf="!hideFields">
+        <div class="p-field p-col-4">
+          <label for="city">Priority:</label>
+          <p-dropdown placeholder="Choose Priority" [options]="priority" formControlName="priority" optionLabel="name"
+            optionValue="value">
+          </p-dropdown>
+
+        </div>
+        <div class="p-field p-col-4">
+          <label for="relocate">Relocate:</label>
+          <input type="text" pInputText id="willingLocation" formControlName="willingLocation" />
+
+        </div>
+        <div class="p-field p-col-4">
+          <label for="documentsCollected">Documents Collected:</label>
+          <input type="text" pInputText id="documentsCollected" formControlName="documentsCollected" />
+        </div>
+
+      </div>
+      <div class="p-fluid p-formgrid p-grid" *ngIf="!hideFields">
+        <div class="p-field p-col">
+          <label for="resources">Resource:</label>
+          <p-dropdown placeholder="Choose Resource" [options]="resources" formControlName="resource" optionLabel="name"
+            optionValue="value">
+          </p-dropdown>
+
+        </div>
+        <div class="p-field p-col">
+          <label for="availability">Availabity:</label>
+          <input type="text" pInputText id="availability" formControlName="availability" />
+
+        </div>
+        <div class="p-field p-col">
+          <label for="consultant_status"><span class="color-red">* </span>Consultant Status:</label>
+          <p-dropdown #statusvaluei placeholder="Choose Status" [options]="statuses" formControlName="consultant_status"
+            optionLabel="label" optionValue="value">
+          </p-dropdown>
+        </div>
+
+          <div class="p-field p-col" *ngIf="(statusvaluei.value=='Interview Scheduled')">
+              <label>Interview Schedule Date :</label>
+            <!--  <p-calendar   dateFormat="MM d, yy" [showTime]="true"  formControlName="schedule_date" inputId="time"></p-calendar>-->
+            <input type="date" pInputText  formControlName="schedule_date" />
+          </div>
+
+
+      </div>
+      <div class="p-fluid p-formgrid p-grid" *ngIf="!hideFields">
+        <div class="p-field p-col-4">
+          <label for="city">Best Contact Number:</label>
+          <p-inputMask formControlName="bestContactNumber" mask="(999) 999-9999"></p-inputMask>
+          <small class="p-invalid" *ngIf="submitted && !bestContactNumber">Best Mobile is .</small>
+        </div>
+        <div class="p-field p-col-4">
+          <label for="skypeId">SkypeID:</label>
+          <input type="text" pInputText id="skypeId" formControlName="skypeId" />
+
+        </div>
+        <div class="p-field p-col-4">
+          <label for="linkedInUrl">LinkedIn ID:</label>
+          <input type="text" pInputText id="linkedInUrl" formControlName="linkedInUrl" />
+        </div>
+      </div>
+      <div class="p-fluid p-formgrid p-grid" >
+        <div class="p-field p-col-4">
+
+          <span *ngIf="consultantForm.value.resume"> Resume <i class="pi pi-times"></i> </span>
+          <label for="resume"><span class="color-red">*</span> Resume :</label>
+          <input type="file" class="form-control" (change)="imagesPreviewResume($event)">
+
+        </div>
+        <div class="p-field p-col-4" *ngIf="!hideFields">
+          <span *ngIf="consultantForm.value.otherDocument"> ID Proof <i class="pi pi-times"></i> </span>
+          <label for="otherDocument"> ID Proof :</label>
+          <input type="file" class="form-control" (change)="imagesPreviewOtherDoc($event)">
+        </div>
+        <div class="p-field p-col-4" *ngIf="!hideFields">
+          <span *ngIf="consultantForm.value.workAuthorization"> Work Authorization <i class="pi pi-times"></i> </span>
+          <label for="workAuthorization"> Work Authorization :</label>
+          <input type="file" class="form-control" (change)="imagesPreviewWorkAuth($event)">
+        </div>
+      </div>
+      <div class="p-fluid " *ngIf="!hideFields">
+        <div class="p-field">
+          <label for="workAuthorization"> Technology Keywords :</label>
+          <p-chips [ngClass]="form-control" separator="," formControlName="keywords"></p-chips>
+          </div>
+      </div>
+      <div class="p-fluid" *ngIf="!hideFields">
+        <div class="p-field">
+          <label for="workAuthorization"> Note :</label>
+          <p-editor formControlName="note" ></p-editor>
+        </div>
+      </div>
+      <div class="p-field" *ngIf="documentsup">
+
+
+        <button type="submit" class="btn btn-primary btn-round"  [disabled]="(!consultantForm.valid)">{{
+          this.consultantButton}}</button>
+      </div>
+
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+
+  </ng-template>
+
+
+</p-dialog>
+
+<p-dialog [(visible)]="technologyDialog" [style]="{width: '50vw'}" [baseZIndex]="10000" header="Technology Details"
+  [modal]="true" styleClass="p-fluid">
+
+  <ng-template pTemplate="content">
+
+    <form [formGroup]="technologiesForm" (ngSubmit)="updateTechnologyDetails()" enctype="multipart/form-data">
+
+      <div class="p-fluid p-formgrid p-grid">
+
+        <div class="p-field p-col">
+          <label for="lastname1">Name:</label>
+          <input type="text" pInputText id="name" formControlName="name" />
+          <small class="p-invalid" *ngIf="submitted && !name">Technology Name Required</small>
+        </div>
+
+      </div>
+
+
+
+
+
+      <div class="p-field">
+
+        <button type="submit" class="btn btn-primary btn-round" [disabled]="!technologiesForm.valid">Add
+          Technology</button>
+      </div>
+
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+  </ng-template>
+
+
+</p-dialog>
+
+<p-dialog [(visible)]="resumeDialog" [style]="{width: '80vw'}" [baseZIndex]="10000" header="Talent Bench Details"
+  [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <ngx-doc-viewer [url]="doc" [viewer]="viewer" style="width:100%;height:80vh;"></ngx-doc-viewer>
+  </ng-template>
+
+</p-dialog>
+<p-confirmPopup></p-confirmPopup>

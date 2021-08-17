@@ -1,0 +1,127 @@
+
+<div class="col p-m-2">
+  <mdb-card  class="c1">
+  <mdb-card-body>
+  <mdb-card-title>
+  <h4>Edit Profile Detail</h4>
+  </mdb-card-title>
+  <mdb-card-text>
+
+    <div class="" *ngIf="user | async; else loading">
+      <div class="">
+        <!-- <h5 class="card-title">Edit Profile</h5> -->
+      </div>
+      <div class="" >
+        <form [formGroup]="updateUser" (ngSubmit)="updateUserDetails()">
+          <div class="row">
+              <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="hidden" name="_method" value="PUT">
+                  <label> Name</label>
+                  <input type="text" formControlName="name" class="form-control" placeholder=" Name" required>
+                  <div *ngIf="name.invalid && (name.dirty || name.touched)"
+                          class="form-text text-muted">
+                        <div *ngIf="name.errors?.required">
+                          Name is required.
+                        </div>
+                        <div *ngIf="name.errors?.minlength">
+                          Name must be at least 5 characters long.
+                        </div>
+                  </div>
+                  <small id="emailHelp" class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.name }}</small>
+
+                  </div>
+              </div>
+          </div>
+
+            <div class="row">
+              <!-- <div class="col-md-6 pr-1">
+                <div class="form-group">
+                  <label>User Name</label>
+                  <input type="text" class="form-control" placeholder="Username">
+                </div>
+              </div> -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Email address</label>
+                  <input type="email" formControlName="email" class="form-control" placeholder="Email" required>
+
+                  <div *ngIf="email.invalid && (email.dirty || email.touched)"
+                          class="form-text text-muted">
+                        <div *ngIf="email.errors?.required">
+                          Email is required.
+                        </div>
+                        <div *ngIf="email.errors?.email">
+                          Invalid email address.
+                        </div>
+                  </div>
+
+                  <small id="emailHelp" class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.email }}</small>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                  <div class="form-group">
+                  <label>Change Password</label>
+                  <input type="password" formControlName="password" class="form-control" placeholder="Password" >
+
+                  <div *ngIf="password.invalid && (password.dirty || password.touched)"
+                          class="form-text text-muted">
+
+                        <div *ngIf="password.errors?.minlength">
+                          Password must be at least 5 characters long.
+                        </div>
+                  </div>
+
+                  <small id="emailHelp" class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.password }}</small>
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                  <div class="form-group">
+                  <label>Outlook Set Password / Change Password</label>
+                  <input type="text" formControlName="out_look_pass" class="form-control" placeholder="Outlook Password" >
+
+                  <div *ngIf="out_look_pass.invalid && (out_look_pass.dirty || out_look_pass.touched)"
+                          class="form-text text-muted">
+                  </div>
+
+                  <small id="outloook" class="form-text text-muted" *ngIf="serverErrors">{{ serverErrors.out_look_pass }}</small>
+                  </div>
+              </div>
+            </div>
+            <input type="hidden" formControlName="id" class="form-control" placeholder="id" >
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="update ml-auto mr-auto">
+                  <button type="submit" class="btn btn-primary btn-round" [disabled]="!updateUser.valid">Update</button>
+
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row" *ngIf="success">
+              <div class="col-md-6">
+                <div class="update ml-auto mr-auto p-m-2">
+                  <div class="alert alert-success" role="alert">
+                 Your profile Updated
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </form>
+      </div>
+    </div>
+    <ng-template #loading>
+      Loading ...
+    </ng-template>
+  </mdb-card-text>
+  </mdb-card-body>
+  </mdb-card>
+  </div>

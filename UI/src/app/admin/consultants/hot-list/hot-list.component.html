@@ -1,0 +1,129 @@
+
+<!-- prime table-->
+<div class="p-grid p-m-2">
+  <div class="p-col">
+    <!-- <p-messages [value]="msgs"></p-messages> -->
+    <p-table #dt1 [value]="hotlists" dataKey="id" [rows]="10" [showCurrentPageReport]="true" [loading]="loading"
+      [rowHover]="true" [autoLayout]="true" [loading]="loading" [filterDelay]="0" columnResizeMode="expand"
+      [reorderableColumns]="true" styleClass="p-datatable-consultants  p-datatable-gridlines">
+
+      <ng-template pTemplate="caption">
+
+        <div class="p-d-flex">
+
+
+
+          <div class="p-d-flex p-ai-right ">
+
+            <button type="button" style="height:30px" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
+              class="p-button-success p-mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+            <button type="button" style="height:30px" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()"
+              class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
+
+          </div><div class="p-d-flex">Hot List</div>
+          <div class="p-input-icon-left p-ml-auto">
+
+
+
+            <div class="p-field">
+
+              <button pButton label="Clear" class="p-button-outlined p-mr-4" icon="pi pi-filter-slash"
+              (click)="clear(dt1)"></button>
+                      </div>
+
+
+
+          </div>
+
+
+        </div>
+
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Name
+              <p-columnFilter type="text" field="first_name" display="menu"></p-columnFilter>
+            </div>
+          </th>
+
+
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Technology
+              <p-columnFilter type="text" field="technologies.name" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Experience
+              <p-columnFilter type="numeric" field="experience" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              State
+              <p-columnFilter type="text" field="state" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Relocate
+              <p-columnFilter type="text" field="willingLocation" display="menu"></p-columnFilter>
+            </div>
+          </th>
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              Visa Type
+              <p-columnFilter type="text" field="visaType" display="menu"></p-columnFilter>
+            </div>
+          </th>
+
+
+
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-consultant let-expanded="expanded">
+        <tr>
+
+
+          <td>
+            {{consultant.first_name}}
+          </td>
+
+          <td>
+            <span class="image-text">{{consultant.technologies?.name}}</span>
+          </td>
+          <td>
+            {{consultant.experience }}
+          </td>
+          <td>
+            {{consultant.state}}
+          </td>
+          <td>
+            {{consultant.willingLocation}}
+          </td>
+          <td>
+            {{consultant.visaType }}
+          </td>
+
+
+
+
+
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">No HotList found.</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+</div>
+<p-toast position="top-left"></p-toast>

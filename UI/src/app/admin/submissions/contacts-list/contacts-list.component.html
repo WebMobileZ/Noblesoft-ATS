@@ -1,0 +1,184 @@
+<p-toast></p-toast>
+<!-- prime table-->
+<div class="card">
+  <!-- <p-messages [value]="msgs"></p-messages> -->
+  <p-table #dt1 [value]="contacts" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [rowHover]="true" [autoLayout]="true" [filterDelay]="0"
+    [globalFilterFields]="['companies.name','contactName','contactMobile','contactEmail']" columnResizeMode="expand" [reorderableColumns]="true"
+    styleClass="p-datatable-companies  p-datatable-gridlines " [paginator]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} companies" >
+
+    <ng-template pTemplate="caption">
+
+      <div class="p-d-flex">
+        <button pButton label="Clear" class="p-button-outlined p-mr-4" icon="pi pi-filter-slash"
+          (click)="clear(dt1)"></button>
+        <div class=" p-d-flex p-ai-center p-jc-between">Conatcts</div>
+
+        <span class="p-input-icon-left p-ml-auto">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" class="p-mr-4" (input)="dt1.filterGlobal($event.target.value, 'contains')"
+            placeholder="Search keyword" />
+        </span>
+        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2"
+          (click)="openNew()"></button>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Action
+          </div>
+        </th>
+
+        <th >
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Company Name
+            <p-columnFilter field="companies" matchMode="in" display="menu" [showMatchModes]="false"
+              [showOperator]="false" [showAddButton]="false">
+              <ng-template pTemplate="header">
+                <div class="p-px-3 p-pt-3 p-pb-0">
+                  <span class="p-text-bold">Choose Company</span>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                <p-multiSelect [ngModel]="value" [options]="companieslist" placeholder="Any"
+                  (onChange)="filter($event.value)" optionLabel="name">
+                  <ng-template let-option pTemplate="item">
+                    <div class="p-multiselect-representative-option">
+                      <span class="p-ml-1">{{option.name}}</span>
+                    </div>
+                  </ng-template>
+                </p-multiSelect>
+              </ng-template>
+            </p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Contact Name
+            <p-columnFilter type="text" field="contactName" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Contact Email
+            <p-columnFilter type="text" field="contactEmail" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Contact Mobile
+            <p-columnFilter type="text" field="contactMobile" display="menu"></p-columnFilter>
+          </div>
+        </th>
+        <th>
+          <div class="p-d-flex p-jc-between p-ai-center">
+            Created at
+
+          </div>
+        </th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-contactdetail let-expanded="expanded">
+      <tr>
+
+        <td>
+
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+            (click)="editProduct(contactdetail)"></button>
+          <!--  <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+          (click)="deleteProduct(consultant)"></button> -->
+        </td>
+        <td>
+          {{contactdetail.companies.name}}
+        </td>
+        <td>
+          {{contactdetail.contactName}}
+        </td>
+        <td>
+          {{contactdetail.contactEmail}}
+        </td>
+        <td>
+          {{contactdetail.contactMobile}}
+        </td>
+        <td>
+          {{contactdetail.created_at | date}}
+        </td>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7">No Companies found.</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+</div>
+<p-dialog [(visible)]="companyDialog" [style]="{width: '50vw'}" [baseZIndex]="10000" header="Vendor Contact Details"
+  [modal]="true" styleClass="p-fluid">
+
+  <ng-template pTemplate="content">
+    <form [formGroup]="companiesForm" (ngSubmit)="updateConsultantDetails()" enctype="multipart/form-data">
+
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col">
+          <label for="firstname1">Vendor Company :</label>
+          <p-dropdown [options]="companieslist" formControlName="vendor_company_id" optionLabel="name"
+            optionValue="vendor_company_id">
+          </p-dropdown>
+
+          <div *ngIf="vendor_company_id.invalid && (vendor_company_id.dirty || vendor_company_id.touched)"
+            class="form-text text-muted">
+            <div *ngIf="vendor_company_id.errors?.required">
+              Company is required.
+            </div>
+          </div>
+        </div>
+
+        <div class="p-field p-col">
+          <label for="city">Contact Name:</label>
+          <input type="text" pInputText id="contactName" formControlName="contactName" />
+          <small class="p-invalid" *ngIf="submitted && !contactName">Contact Name is Required</small>
+        </div>
+
+      </div>
+
+      <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col">
+          <label for="city">Contact Mobile:</label>
+          <p-inputMask formControlName="contactMobile" mask="(999) 999-9999? x99999"></p-inputMask>
+
+          <small class="p-invalid" *ngIf="submitted && !contactMobile">Contact Mobile is Required</small>
+        </div>
+
+        <div class="p-field p-col">
+          <label for="city">Contact Email:</label>
+          <input type="text" pInputText id="contactEmail" formControlName="contactEmail" />
+
+          <div *ngIf="submitted && (companiesForm.get('contactEmail').invalid && companiesForm.get('contactEmail').touched) || companiesForm.get('contactEmail').dirty">
+            <small class="text-danger p-invalid" *ngIf="companiesForm.get('contactEmail').errors?.required">Email address is required</small>
+            <small class="text-danger p-invalid" *ngIf="companiesForm.get('contactEmail').errors?.email">Email address is invalid</small>
+          </div>
+        </div>
+
+      </div>
+      <div class="p-field">
+
+        <button type="submit" class="btn btn-primary btn-round" [disabled]="!companiesForm.valid">{{ this.companyButton
+          }}</button>
+      </div>
+
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+  </ng-template>
+
+
+</p-dialog>

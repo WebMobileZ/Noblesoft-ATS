@@ -1,0 +1,79 @@
+<div class="jd-view card" style="padding: 20px;">
+  <h1><a [routerLink]="[ '/jobs/list' ]"><i class="pi pi-arrow-left" style="font-size: 2rem"></i></a> {{job?.job_title}}
+  </h1>
+  <p><strong>{{job?.clients?.name}}</strong> | {{job?.city}}, {{job?.state}}</p>
+  <div class="p-d-flex p-ai-center" *ngIf="job">
+    <b>Assigned To </b> :  <p-chip label="{{user?.users?.name}}" styleClass="p-mr-2"
+      *ngFor="let user of job?.assignee; index as i; first as isFirst"></p-chip><br>
+  </div>
+  <br>
+  <div class="p-d-flex p-ai-center" *ngIf="job?.mandatoryskills">
+    <b>Mandatory Skills </b> : <p-chip label="{{skilss}}" styleClass="p-mr-2"
+      *ngFor="let skilss of job?.mandatoryskills; index as i; first as isFirst"></p-chip><br>
+  </div>
+
+  <div class="tabs-section">
+    <ul *ngIf="job">
+      <li>Recruitment Manager <br><b>{{job?.user?.name}}</b></li>
+      <li>Client Bill Rate <br><b> {{job?.client_bill_rate}}</b></li>
+      <li>Pay Rate<br><b> {{job?.pay_rate}}</b></li>
+      <li>Created On<br><b>{{job?.created_at | date}}</b></li>
+      <li>Job Status<br><b>{{job?.status}}</b></li>
+      <li class="br-none">Prime Vendor<br><b>-</b></li>
+    </ul>
+  </div>
+  <h3>Job Description</h3>
+  <div [innerHTML]="job?.description"></div>
+
+  <p-table [value]="applicants">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Aplicant Name</th>
+        <th>Submitted On</th>
+        <th>Contact/Location</th>
+        <th>Pay Rate</th>
+        <th>Visa Type</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Status</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-bench>
+      <tr>
+        <td>{{bench.first_name}} {{bench.last_name}}</td>
+        <td>{{bench.created_at|date}}</td>
+        <td>{{bench.consultant_mobile_number}}</td>
+        <td>${{bench.rate}}</td>
+        <td>{{bench.visaType}}</td>
+        <td>{{bench.city}}</td>
+        <td>{{bench.state}}</td>
+        <td>
+          <p-tag value="{{bench.consultant_status}}"></p-tag>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="8">
+              <div class="track">
+                <div class="step "  [ngClass]="[ (bench.consultant_status=='Interested'|| bench.consultant_status=='Interview Schedule'  || bench.consultant_status=='Submited Prime Vendor' || bench.consultant_status=='Submited Client' || bench.consultant_status=='Placed') ? 'active' : '']"> <span class="icon"> <i class="fa fa-check"></i> </span> <span
+                    class="text">Interested</span> </div>
+                <div class="step" [ngClass]="[ ( bench.consultant_status=='Interview Schedule'  || bench.consultant_status=='Submited Prime Vendor' || bench.consultant_status=='Submited Client' || bench.consultant_status=='Placed') ? 'active' : '']"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text"> Interview
+                    Scheduled</span> </div>
+                <div class="step" [ngClass]="[ (  bench.consultant_status=='Submited Prime Vendor' || bench.consultant_status=='Submited Client' || bench.consultant_status=='Placed') ? 'active' : '']"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Submited Prime
+                      Vendor</span> </div>
+                <div class="step" [ngClass]="[ ( bench.consultant_status=='Submited Client' || bench.consultant_status=='Placed') ? 'active' : '']"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text"> Submited Client
+                  </span> </div>
+
+                <div class="step" [ngClass]="[ (  bench.consultant_status=='Placed') ? 'active' : '']"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Placed</span>
+                </div>
+              </div>
+
+
+          <hr>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+
+

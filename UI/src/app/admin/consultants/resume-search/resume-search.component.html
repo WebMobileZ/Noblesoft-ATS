@@ -1,0 +1,369 @@
+<div class="p-grid p-m-2">
+  <div class="p-col-10">
+    <p-dataView #dv [value]="hotlists" [loading]="loading" [paginator]="true" [rows]="10" [lazy]="true"
+      (onLazyLoad)="loadData($event)" [totalRecords]="totalRecords" layout="list">
+      <ng-template pTemplate="header">
+        <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
+          <span class="p-input-icon-left p-mb-2 p-mb-md-0">
+            <button pButton label="Clear" class="p-button-outlined p-mr-4" icon="pi pi-filter-slash"
+            (click)="clear()"></button>
+            <!--    <i class="pi pi-search"></i>
+
+                <br>
+    <p-card header="Filters by Experience">
+      <div *ngFor="let category of experiencesstatus" class="p-field-checkbox">
+
+        <p-checkbox (onChange)="onChangeexp($event);" name="group1" value="{{category.value}}"
+        label="{{category.name}}" [(ngModel)]="selectedExp" inputId="ny"></p-checkbox>
+    </div>
+  </p-card>
+            <input type="search" pInputText placeholder="Search by Name" (input)="dv.filter($event.target.value)"> -->
+          </span>
+          <span class="p-input-icon-left p-mb-2 p-mb-md-0">
+            <span class=" p-mr-2">
+              <p-dropdown placeholder="Choose Technolgy" [(ngModel)]="techfilter" [options]="results"
+                (onChange)="searchConsultantChips($event)" optionLabel="name" optionValue="technology_id"
+                placeholder="Technology" [style]="{'width':'200px'}" scrollHeight="400px" filter="true"
+                filterBy="name,id" resetFilterOnHide="true">
+              </p-dropdown>
+            </span>
+            <span class=" p-mr-2">
+              <p-dropdown placeholder="Experience"  [(ngModel)]="selectedExp" [options]="experiencesstatus"
+              (onChange)="onChangeexp($event);"  optionLabel="name"
+                 [style]="{'width':'200px'}" scrollHeight="400px" filter="true"
+                filterBy="name,value" resetFilterOnHide="true">
+              </p-dropdown>
+            </span>
+            <p-chips [(ngModel)]="values" separator="," placeholder="Resume Keywords Search.."
+              (onAdd)="searchConsultantChips($event)" (onRemove)="searchConsultantChips($event)"></p-chips>
+          </span>
+
+          <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+        </div>
+      </ng-template>
+      <ng-template let-product pTemplate="listItem">
+        <div class="search-result card p-col-12" title="">
+          <div class="card-header p-2 pb-0">
+            <div class="card-header-content">
+              <ul class="ml-auto list-inline social-links mb-0 d-flex flex-row-reverse ng-star-inserted">
+                <!--<li data-cy="web-profile" class="list-inline-item ng-star-inserted" *ngIf="product.resume"> <button
+                    pButton type="button" pTooltip="View {{product.first_name}} Resume" tooltipPosition="top"
+                    (click)="openDocNew(product.resume)" label="View Resume" icon="pi pi-eye"
+                    class="p-button-sm"></button></li>-->
+                <li data-cy="web-profile" class="list-inline-item ng-star-inserted"> <a
+                    (click)="showModalDialog1(product.note)" tabindex="0" data-toggle="popover" data-trigger="focus"
+                    title="" data-content="Note" data-original-title="Note"><img class="noteclass"
+                      src="./assets/img/sticky.png"></a>
+                </li>
+                <li data-cy="web-profile" class="list-inline-item ng-star-inserted"> <a *ngIf="product.resume"
+                    href="https://apiv2.webmobilez.com/storage/app/uploads/resume/{{product.resume}}"
+                    pTooltip="Download Resume" target="_blank" download><i class="pi pi-cloud-download"
+                      style="font-size: 2rem"></i> </a></li>
+                <li data-cy="web-profile" class="list-inline-item ng-star-inserted"> <a *ngIf="product.otherDocument"
+                    pTooltip="Download ID Proof"
+                    href="https://apiv2.webmobilez.com/storage/app/uploads/otherDocument/{{product.otherDocument}}"
+                    target="_blank" download><img src="../../../../assets/img/idcard.png"></a></li>
+                <li data-cy="web-profile" class="list-inline-item ng-star-inserted"> <a class="p-m-1"
+                    *ngIf="product.workAuthorization" pTooltip="Download Work Authorization"
+                    href="https://apiv2.webmobilez.com/storage/app/uploads/workauthorization/{{product.workAuthorization}}"
+                    target="_blank" download><img src="../../../../assets/img/suitcase.png"></a></li>
+
+
+
+                <li data-cy="web-profile" class="list-inline-item ng-star-inserted"> <a *ngIf="product.resume"
+                    pTooltip="View {{product.first_name}} Resume" class="p-m-1" href="javascript:void(0);"
+                    (click)="openDocNew(product.resume)"><img src="../../../../assets/img/word.png"></a></li>
+
+
+              </ul>
+
+              <div class="d-inline-block ng-star-inserted"><span title="Current or latest job title"
+                  data-cy="current-or-last-job-title"
+                  class="h2 currentOrLastTitle d-inline font-weight-bold pl-1 ng-star-inserted"><span
+                    class="highlight">{{product.first_name}}</span> </span>
+
+              </div>
+              <div class="d-inline-block ng-star-inserted">
+                <!----><span class="latestCompanyText pl-1 ng-star-inserted"><span
+                            _ngcontent-iii-c82="" class="pr-1"><i _ngcontent-iii-c82="" aria-hidden="true"
+                            class="fa fa-fw fa-briefcase fa-outline"></i>
+                          Preferred:</span><span _ngcontent-iii-c82="" data-cy="pref-prev-job-title"
+                          class="break-word"><span class="highlight">{{product.technologies?.name}}</span></span></span>
+                <!---->
+              </div>
+
+            </div>
+
+          </div>
+          <div class="card-body pt-1 pb-0 pl-lg-5 c-pointer">
+            <div class="card-section-content card-text">
+              <div class="media py-2">
+
+                <div class="media-body ml-2">
+
+                  <div class="card-info-grid container-fluid">
+
+                    <div class="row">
+
+                      <div class="col-12 col-md-6 col-lg-3 px-0">
+                        <div title="Technology" class="data-item my-1 location-name ng-star-inserted"><span
+                            _ngcontent-iii-c82="" class="pr-1"><i _ngcontent-iii-c82="" aria-hidden="true"
+                              class="fa fa-fw fa-envelope"></i>
+                            </span><span _ngcontent-iii-c82="" data-cy="pref-prev-job-title"
+                            class="break-word"><span class="highlight">{{product.consultant_email}}</span></span>
+                        </div>
+
+                      </div>
+                      <div title="Tax Type" class="col-12 col-md-6 col-lg-3 px-0">
+                        <div class="data-item my-1 work-permits"><i aria-hidden="true"
+                            class="fa fa-fw fa-mobile"></i><span data-cy="work-permit"
+                            class="font-weight-bold ng-star-inserted"> Conatct Number:
+                            {{product.consultant_mobile_number }}</span>
+
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-3 px-0">
+                        <div title="Location" class="data-item my-1 location-name ng-star-inserted"><i
+                            aria-hidden="true" class="fa fa-fw fa-map-marker fa-outline"></i><span
+                            data-cy="location">{{product.city }} ,
+                            {{product.state
+                            }}</span></div>
+
+                      </div>
+                      <div title="Total Work Experience" class="col-12 col-md-6 col-lg-3 px-0">
+                        <div class="data-item my-1 total-work-exp"><i aria-hidden="true"
+                            class="fa fa-fw fa-calendar"></i><span data-cy="work-exp"
+                            class="ng-star-inserted">{{product.experience }}
+                            Years experience</span>
+
+                        </div>
+                      </div>
+
+                      <div title="Work Permit" class="col-12 col-md-6 col-lg-3 px-0">
+                        <div class="data-item my-1 work-permits"><i aria-hidden="true"
+                            class="fa fa-fw fa-globe"></i><span data-cy="work-permit"
+                            class="font-weight-bold ng-star-inserted"> {{product.visaType }}</span>
+
+                        </div>
+                      </div>
+                      <div title="Tax Type" class="col-12 col-md-6 col-lg-3 px-0">
+                        <div class="data-item my-1 work-permits"><i aria-hidden="true" class="pi pi-dollar"></i><span
+                            data-cy="work-permit" class="font-weight-bold ng-star-inserted"> Tax Type:
+                            {{product.tax_type }}</span>
+
+                        </div>
+                      </div>
+
+                      <div title="Willing to relocate" class="col-12 col-md-6 col-lg-3 px-0">
+
+                        <div data-cy="willing-to-relocate" class="data-item my-1 willing-to-relocate ng-star-inserted">
+                          <i aria-hidden="true" class="fa fa-fw fa-map"></i><span
+                            data-cy="willing-to-relocate-location"> Willing to
+                            relocate: {{product.willingLocation=='yes'?"Yes":"No"
+                            }}</span>
+                        </div>
+
+                      </div>
+
+                      <div role="switch" tabindex="0" class="col-12 col-md-6 col-lg-3 px-0 c-pointer"
+                        aria-checked="false">
+                        <div class="data-item my-1 last-active-on-brand"><i aria-hidden="true"
+                            class="fa fa-fw fa-clock"></i><span data-cy="date-last-active"
+                            class="font-weight-bold dotted-underline-on-hover"> {{calculateDiff(product.created_at)}}
+                            Days ago</span></div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div data-cy="skills-list" class="skills-list container-fluid ng-star-inserted">
+                <div title="Top Skills" class="row pl-lg-0">
+
+                  <div class="pl-lg-0 col-12 col-md-6 col-lg-4 col-xl-2 ng-star-inserted"
+                    style="padding-right: 5px; padding-left: 5px;"
+                    *ngFor="let keyword of product.keywords; index as i; first as isFirst">
+                    <div data-cy="skill-item" class="skill-item px-1 py-1 d-flex justify-content-start"
+                      title="{{keyword}}" data-cy-value="{{keyword}}" data-cy-index="0"><span data-cy="skill-item-text"
+                        class="pr-1 mr-auto"><span class="highlight">{{keyword}}</span></span>
+                    </div>
+                  </div>
+
+
+                  <!---->
+                </div>
+              </div>
+              <!---->
+
+
+              <!---->
+            </div>
+          </div>
+
+        </div>
+      </ng-template>
+      <ng-template let-product pTemplate="gridItem">
+        <div class="search-result card p-col-6" title="">
+          <div class="card-header p-2 pb-0">
+            <div class="card-header-content">
+              <ul class="ml-auto list-inline social-links mb-0 d-flex flex-row-reverse ng-star-inserted">
+                <li data-cy="web-profile" class="list-inline-item ng-star-inserted"> <a
+                    (click)="showModalDialog1(product.note)" tabindex="0" data-toggle="popover" data-trigger="focus"
+                    title="" data-content="Note" data-original-title="Note"><img class="noteclass"
+                      src="./assets/img/sticky.png"></a>
+                </li>
+                <li data-cy="web-profile" class="list-inline-item ng-star-inserted"> <a *ngIf="product.resume"
+                    href="https://apiv2.webmobilez.com/storage/app/uploads/resume/{{product.resume}}"
+                    pTooltip="Download Resume" target="_blank" download><i class="pi pi-cloud-download"
+                      style="font-size: 2rem"></i> </a></li>
+                <li data-cy="web-profile" class="list-inline-item ng-star-inserted"> <a *ngIf="product.otherDocument"
+                    pTooltip="Download ID Proof"
+                    href="https://apiv2.webmobilez.com/storage/app/uploads/otherDocument/{{product.otherDocument}}"
+                    target="_blank" download><img src="../../../../assets/img/idcard.png"></a></li>
+                <li data-cy="web-profile" class="list-inline-item ng-star-inserted"> <a class="p-m-1"
+                    *ngIf="product.workAuthorization" pTooltip="Download Work Authorization"
+                    href="https://apiv2.webmobilez.com/storage/app/uploads/workauthorization/{{product.workAuthorization}}"
+                    target="_blank" download><img src="../../../../assets/img/suitcase.png"></a></li>
+
+
+
+                <li data-cy="web-profile" class="list-inline-item ng-star-inserted"> <a *ngIf="product.resume"
+                    pTooltip="View {{product.first_name}} Resume" class="p-m-1" href="javascript:void(0);"
+                    (click)="openDocNew(product.resume)"><img src="../../../../assets/img/word.png"></a></li>
+
+
+              </ul>
+              <div class="d-inline-block ng-star-inserted"><span title="Current or latest job title"
+                  data-cy="current-or-last-job-title"
+                  class="h2 currentOrLastTitle d-inline font-weight-bold pl-1 ng-star-inserted"><span
+                    class="highlight">{{product.first_name}}</span> </span>
+              </div>
+              <div class="d-inline-block ng-star-inserted">
+               <span class="latestCompanyText pl-1 ng-star-inserted">@ {{product.technologies?.name}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-body pt-1 pb-0 pl-lg-5 c-pointer">
+            <div class="card-section-content card-text">
+              <div class="media py-2">
+
+                <div class="media-body ml-2">
+
+                  <div class="card-info-grid container-fluid">
+
+                    <div class="row">
+
+                      <div class="col-12 col-md-6 col-lg-3 px-0">
+                        <div title="Technology" class="data-item my-1 location-name ng-star-inserted"><span
+                            _ngcontent-iii-c82="" class="pr-1"><i _ngcontent-iii-c82="" aria-hidden="true"
+                              class="fa fa-fw fa-briefcase fa-outline"></i>
+                            Preferred:</span><span _ngcontent-iii-c82="" data-cy="pref-prev-job-title"
+                            class="break-word"><span class="highlight">{{product.technologies?.name}}</span></span>
+                        </div>
+
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-3 px-0">
+                        <div title="Location" class="data-item my-1 location-name ng-star-inserted"><i
+                            aria-hidden="true" class="fa fa-fw fa-map-marker fa-outline"></i><span
+                            data-cy="location">{{product.city }} ,
+                            {{product.state
+                            }}</span></div>
+
+                      </div>
+                      <div title="Total Work Experience" class="col-12 col-md-6 col-lg-3 px-0">
+                        <div class="data-item my-1 total-work-exp"><i aria-hidden="true"
+                            class="fa fa-fw fa-calendar"></i><span data-cy="work-exp"
+                            class="ng-star-inserted">{{product.experience }}
+                            Years experience</span>
+                        </div>
+                      </div>
+                      <div title="Tax Type" class="col-12 col-md-6 col-lg-3 px-0">
+                        <div class="data-item my-1 work-permits"><i aria-hidden="true"
+                            class="fa fa-fw fa-mobile"></i><span data-cy="work-permit"
+                            class="font-weight-bold ng-star-inserted"> {{product.consultant_mobile_number }}</span>
+                        </div>
+                      </div>
+                      <div title="Work Permit" class="col-12 col-md-6 col-lg-3 px-0">
+                        <div class="data-item my-1 work-permits"><i aria-hidden="true"
+                            class="fa fa-fw fa-globe"></i><span data-cy="work-permit"
+                            class="font-weight-bold ng-star-inserted"> {{product.visaType }}</span>
+
+                        </div>
+                      </div>
+                      <div title="Tax Type" class="col-12 col-md-6 col-lg-3 px-0">
+                        <div class="data-item my-1 work-permits"><i aria-hidden="true" class="pi pi-dollar"></i><span
+                            data-cy="work-permit" class="font-weight-bold ng-star-inserted"> Tax Type:
+                            {{product.tax_type }}</span>
+
+                        </div>
+                      </div>
+                      <div title="Willing to relocate" class="col-12 col-md-6 col-lg-3 px-0">
+                        <div data-cy="willing-to-relocate" class="data-item my-1 willing-to-relocate ng-star-inserted">
+                          <i aria-hidden="true" class="fa fa-fw fa-map"></i><span
+                            data-cy="willing-to-relocate-location"> Willing to
+                            relocate: {{product.willingLocation=='yes'?"Yes":"No"
+                            }}</span>
+                        </div>
+                      </div>
+                      <div role="switch" tabindex="0" class="col-12 col-md-6 col-lg-3 px-0 c-pointer"
+                        aria-checked="false">
+                        <div class="data-item my-1 last-active-on-brand"><i aria-hidden="true"
+                            class="fa fa-fw fa-clock"></i><span data-cy="date-last-active"
+                            class="font-weight-bold dotted-underline-on-hover"> {{calculateDiff(product.created_at)}}
+                            Days ago</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div data-cy="skills-list" class="skills-list container-fluid ng-star-inserted">
+                <div title="Top Skills" class="row pl-lg-0">
+                  <div class="pl-lg-0 col-12 col-md-6 col-lg-4 col-xl-2 ng-star-inserted"
+                    style="padding-right: 5px; padding-left: 5px;"
+                    *ngFor="let keyword of product.keywords; index as i; first as isFirst">
+                    <div data-cy="skill-item" class="skill-item px-1 py-1 d-flex justify-content-start"
+                      title="{{keyword}}" data-cy-value="{{keyword}}" data-cy-index="0"><span data-cy="skill-item-text"
+                        class="pr-1 mr-auto"><span class="highlight">{{keyword}}</span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-dataView>
+  </div>
+  <div class="p-col-2">
+    <p-card header="Filters by VisaTypes">
+      <div *ngFor="let category of visaTypes" class="p-field-checkbox">
+        <!-- <p-checkbox name="group2" value="category" [value]="category"  [(ngModel)]="selectedCities" (onChange)="dv.filter(category.value);onChange(category.value);" binary="true" [inputId]="category.value" ></p-checkbox> -->
+        <p-checkbox (onChange)="onChange($event);" name="group1" value="{{category.value}}"
+          label="{{category.value}}" [(ngModel)]="selectedCities" inputId="ny"></p-checkbox>
+      </div>
+    </p-card>
+
+    <br>
+    <p-card header="Filters by Tax Type">
+      <div *ngFor="let tax of taxtypes" class="p-field-checkbox">
+        <!-- <p-checkbox name="group2" value="category" [value]="category"  [(ngModel)]="selectedCities" (onChange)="dv.filter(category.value);onChange(category.value);" binary="true" [inputId]="category.value" ></p-checkbox> -->
+        <p-checkbox (onChange)="onChangeTax($event);" name="group1" value="{{tax.value}}"
+          label="{{tax.value}}" [(ngModel)]="selectTax" inputId="nyq"></p-checkbox>
+      </div>
+    </p-card>
+  </div>
+</div>
+
+<p-dialog [(visible)]="consultantDialog" [style]="{width: '80vw'}" [baseZIndex]="10000" header="Talent Bench Details"
+  [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <ngx-doc-viewer [url]="doc" [viewer]="viewer" style="width:100%;height:80vh;"></ngx-doc-viewer>
+  </ng-template>
+
+</p-dialog>
+<p-dialog header="Note" [(visible)]="displayModal1" [style]="{width: '50vw'}" [baseZIndex]="10000">
+  <p [innerHTML]="valuenote"></p>
+
+</p-dialog>
+

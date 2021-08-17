@@ -1,0 +1,775 @@
+<div *ngIf="role=='recruiter'">
+  <div class="p-grid p-m-2">
+    <div class="p-col">
+      <p-card [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <h2>  Interview Schedules <p-dropdown class="p-m-2"  [options]="interviewDropDown" [(ngModel)]="selectInterviewBenchTalent" (onChange)="onInterviewsConsultants($event)" optionLabel="name"></p-dropdown> </h2>
+
+        <p-tabView>
+          <p-tabPanel header="Interviews">
+            <p-table [value]="interviewjobsschedules" [scrollable]="true" scrollHeight="150px">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th scope="col">Applicant Name</th>
+                  <th scope="col">Job Title</th>
+                  <th scope="col">Client Name</th>
+                  <th scope="col">Schedule Date</th>
+                  <th scope="col">Status</th>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-app>
+                <tr>
+                  <th scope="row">{{app.first_name}} {{app.last_name}}</th>
+                  <td>{{app.with_jobs?.job_title}}</td>
+                  <td>{{app.with_jobs?.clients?.name}}</td>
+                  <td>{{app?.schedule_date|date}} {{app?.timezone}}</td>
+                  <td>{{app.consultant_status}}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+
+          </p-tabPanel>
+        </p-tabView>
+      </p-card>
+    </div>
+    <!--<div class="p-col-4">
+      <p-card header="" [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <h2> My Recruitment Activity<p-dropdown class="p-m-5" [options]="cities" (onChange)="onStatusBencshalesChange($event)"
+          [(ngModel)]="selectedBenchsaleActivity" optionLabel="name"></p-dropdown>
+          </h2>
+        <p-tabView>
+          <p-tabPanel header="Activity">
+
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Active Jobs
+                <span class="badge badge-primary badge-pill">{{jobs?.length}}</span>
+              </li>
+
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Interviews
+                <span class="badge badge-primary badge-pill">{{myinterviews}}</span>
+              </li>
+
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Placements
+                <span class="badge badge-primary badge-pill">{{placed}}</span>
+              </li>
+            </ul>
+          </p-tabPanel>
+
+        </p-tabView>
+      </p-card>
+    </div> -->
+
+   <!-- <div class="p-col-4">
+      <p-card header="Jobs Applicants" [style]="{'height': '27rem', 'margin-bottom': '0em'}">
+        <p-chart type="pie" [data]="data1" [options]="options" width="30vw" height="30vh"></p-chart>
+      </p-card>
+    </div> -->
+
+  </div>
+
+  <div class="p-grid p-m-2">
+    <div class="p-col-4">
+      <p-card header="My Recruitment Activity" [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <p-tabView>
+          <p-tabPanel header="Activity">
+
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Active Bench
+                <span class="badge badge-primary badge-pill">{{activebench}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Recruitment Submissions
+                <span class="badge badge-primary badge-pill">{{submissions}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Interviews
+                <span class="badge badge-primary badge-pill">{{myinterviews}}</span>
+              </li>
+
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Placements
+                <span class="badge badge-primary badge-pill">{{placed}}</span>
+              </li>
+            </ul>
+          </p-tabPanel>
+
+        </p-tabView>
+      </p-card>
+    </div>
+    <div class="p-col-4">
+      <p-card header="My Applicants Activity" [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <p-tabView>
+          <p-tabPanel header="Today Applicants on Bench">
+            <ul class="list-group">
+
+              <li *ngFor="let app of allApplicants"
+                class="list-group-item d-flex justify-content-between align-items-center">
+                {{app.first_name}} {{app.last_name}}
+                <span class="badge badge-primary badge-pill">{{calculateDiff(app.created_at|date)}} Days</span>
+              </li>
+
+            </ul>
+          </p-tabPanel>
+
+
+        </p-tabView>
+      </p-card>
+    </div>
+    <div class="p-col-4">
+      <p-card [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <p-tabView>
+
+          <p-tabPanel header="Targets">
+
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Quality Submissions
+                <span class="badge badge-primary badge-pill">{{qualitysubmissions}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Daily Submissions
+                <span class="badge badge-primary badge-pill">{{dailysubmissions}}</span>
+              </li>
+
+            </ul>
+          </p-tabPanel>
+
+
+        </p-tabView>
+      </p-card>
+    </div>
+
+  </div>
+</div>
+<div *ngIf="role=='admin'">
+  <div class="p-grid p-m-2">
+    <div class="p-col-12">
+      <app-dashboard-interview></app-dashboard-interview>
+    </div>
+
+  </div>
+  <div class="p-grid p-m-2" >
+    <div class="p-col-4">
+<app-dashboard-headhunters></app-dashboard-headhunters>
+    </div>
+    <!-- Jobs Display
+      <div class="p-col-4">
+      <p-card>
+        <h2> Managers Summary  <p-dropdown class="p-m-2" [options]="cities" [(ngModel)]="selectManager" (onChange)="onStatusChangeManager($event)" optionLabel="name"></p-dropdown>
+        </h2>
+        <p-tabView>
+          <p-tabPanel header="My Recruitment Summary">
+            <p-table [value]="activeJobswithUsers" [scrollable]="true" scrollHeight="150px">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th scope="col">Employee Name</th>
+                  <th scope="col">Jobs Submited</th>
+                  <th scope="col">Placed</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-talent>
+                <tr >
+                  <td>{{talent.name}}</td>
+                  <th scope="row">{{talent.jobs?.length}}</th>
+                  <th>0</th>
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-tabPanel>
+        </p-tabView>
+      </p-card>
+    </div> -->
+
+    <div class="p-col-4">
+     <app-dashboard-benchsales></app-dashboard-benchsales>
+    </div>
+    <div class="p-col-4">
+      <p-card  [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <h2>My Recruitment Activity</h2>
+        <p-tabView>
+          <p-tabPanel header="Current Activity">
+             <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Active Bench
+                <span class="badge badge-primary badge-pill">{{activebench}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Recruitment Submissions
+                <span class="badge badge-primary badge-pill">{{submissions}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Interviews
+                <span class="badge badge-primary badge-pill">{{myinterviews}}</span>
+              </li>
+
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Placements
+                <span class="badge badge-primary badge-pill">{{placed}}</span>
+              </li>
+            </ul>
+          </p-tabPanel>
+
+        </p-tabView>
+      </p-card>
+
+     <!-- <p-card [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <p-tabView>
+          <p-tabPanel header="Consultants">
+
+            <p-dropdown class="p-m-2" [options]="cities" (onChange)="onStatusChange($event)" [(ngModel)]="selectedCity"
+              optionLabel="name"></p-dropdown>
+            <p-dropdown class="p-m-2" [options]="consultants" placeholder="Select Head Hunter"
+              (onChange)="onStatusChange($event)" [(ngModel)]="selectedConsultant" optionLabel="name"></p-dropdown>
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Consultant Submissions
+                <span class="badge badge-primary badge-pill">{{hunterconsultants?.length}}</span>
+              </li>
+
+
+            </ul>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Consultant Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phone Number</th>
+                  <th scope="col">Rate</th>
+                  <th scope="col">Created At</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let app of hunterconsultants">
+                  <th scope="row">{{app.first_name}} {{app.last_name}}</th>
+                  <td>{{app.consultant_email}}</td>
+                  <td>{{app.consultant_mobile_number}}</td>
+                  <td>{{app.rate}}</td>
+                  <td>{{app?.created_at | date}} </td>
+                  <td>{{app.consultant_status}}</td>
+
+                </tr>
+
+              </tbody>
+            </table>
+          </p-tabPanel>
+        </p-tabView>
+      </p-card> -->
+    </div>
+    <div class="p-col-4">
+      <app-dashboard-placed-candidates></app-dashboard-placed-candidates>
+     </div>
+  </div>
+
+
+
+ <!-- <div class="p-grid p-m-2">
+    <div class="p-col-4">
+      <p-card header="My Recruitment Activity" [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <p-tabView>
+          <p-tabPanel header="Activity">
+            <p-dropdown class="p-m-2" [options]="cities" [(ngModel)]="selectedCity" optionLabel="name"></p-dropdown>
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Active Bench
+                <span class="badge badge-primary badge-pill">{{activebench}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Recruitment Submissions
+                <span class="badge badge-primary badge-pill">{{submissions}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Interviews
+                <span class="badge badge-primary badge-pill">{{myinterviews}}</span>
+              </li>
+
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Placements
+                <span class="badge badge-primary badge-pill">{{placed}}</span>
+              </li>
+            </ul>
+          </p-tabPanel>
+
+        </p-tabView>
+      </p-card>
+    </div>
+    <div class="p-col-4">
+      <p-card header="My Applicants Activity" [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <p-tabView>
+          <p-tabPanel header="Today Applicants on Bench">
+            <ul class="list-group">
+
+              <li *ngFor="let app of allApplicants"
+                class="list-group-item d-flex justify-content-between align-items-center">
+                {{app.first_name}} {{app.last_name}}
+                <span class="badge badge-primary badge-pill">{{calculateDiff(app.created_at|date)}} Days</span>
+              </li>
+
+            </ul>
+          </p-tabPanel>
+
+
+        </p-tabView>
+      </p-card>
+    </div>
+    <div class="p-col-4">
+      <p-card header="Jobs Applicants" [style]="{'height': '27rem', 'margin-bottom': '0em'}">
+        <p-chart type="pie" [data]="data1" [options]="options" width="30vw" height="30vh"></p-chart>
+      </p-card>
+    </div>
+
+  </div> -->
+</div>
+
+<div *ngIf="(role=='head-hunters')||(role=='adminhunters') ">
+  <!--<div class="p-grid p-m-2">
+    <div class="p-col-12">
+      <p-card [style]="{ 'margin-top': '0em'}">
+        <h2>My Recruitment Summary</h2>
+        <p-tabView>
+          <p-tabPanel header="Recruitment List">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Active Jobs</th>
+
+                  <th scope="col">Internal Submissions</th>
+                  <th scope="col">Submited to Client</th>
+                  <th scope="col">Job Age</th>
+                  <th scope="col">Interviews</th>
+                  <th scope="col">Placements</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let job of jobs">
+                  <th scope="row">{{job.job_title}}</th>
+                  <td>{{job.benchtalents?.length}}</td>
+                  <td>{{job.benchtalentswhereclient?.length}}</td>
+                  <td>{{calculateDiff(job.created_at|date)}} </td>
+                  <td>{{job.benchtalentswhere?.length}}</td>
+                  <td>0</td>
+                </tr>
+              </tbody>
+            </table>
+          </p-tabPanel>
+        </p-tabView>
+      </p-card>
+    </div>
+
+  </div> -->
+  <div class="p-grid p-m-2">
+    <div class="p-col-4">
+      <p-card [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <h2> My TalentBench Activity <p-dropdown class="p-m-5" [options]="cities" (onChange)="onStatusChange($event)"
+            [(ngModel)]="selectedCity" optionLabel="name"></p-dropdown>
+        </h2>
+        <p-tabView>
+          <p-tabPanel header="Consultants">
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Submissions <span class="badge badge-primary badge-pill">{{hunterconsultants?.length}}</span>
+              </li>
+            </ul>
+            <p-table [value]="hunterconsultants" [loading]="loading" [scrollable]="true" scrollHeight="150px">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Consultant Name</th>
+                  <th>Status</th>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-customer>
+                <tr>
+                  <td>{{customer.first_name}} {{customer.last_name}}</td>
+                  <td>{{customer.consultant_status}}</td>
+
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-tabPanel>
+        </p-tabView>
+      </p-card>
+    </div>
+    <div class="p-col-4">
+      <p-card [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <p-tabView>
+          <p-tabPanel header="TalentBench Approval">
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                Total TalentBench Approval <span class="badge badge-primary badge-pill">{{getMyhotlistConsultants?.length}}</span>
+              </li>
+            </ul>
+            <p-table [value]="getMyhotlistConsultants" [loading]="loading" [scrollable]="true" scrollHeight="150px">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Consultant Name</th>
+                  <th>Status</th>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-customer>
+                <tr>
+                  <td>{{customer.first_name}} {{customer.last_name}}</td>
+                  <td>{{customer.consultant_status}}</td>
+
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-tabPanel>
+          <p-tabPanel header="Pending Submissions">
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                Total Pending Submissions <span
+                  class="badge badge-primary badge-pill">{{pendinghotlist?.length}}</span>
+              </li>
+            </ul>
+            <p-table [value]="pendinghotlist" [loading]="loading" [scrollable]="true" scrollHeight="150px">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Consultant Name</th>
+                  <th>Status</th>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-customer>
+                <tr>
+                  <td>{{customer.first_name}} {{customer.last_name}}</td>
+                  <td>{{customer.consultant_status}}</td>
+
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-tabPanel>
+        </p-tabView>
+      </p-card>
+    </div>
+    <div class="p-col-4">
+      <p-card [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <h2> Target Activity <p-dropdown class="p-m-5" [options]="cities" (onChange)="onStatusChange($event)"
+            [(ngModel)]="selectedCity" optionLabel="name"></p-dropdown>
+        </h2>
+        <p-tabView>
+          <p-tabPanel header="Target">
+            <div class="badges">
+              <p-tag styleClass="p-mr-2" severity="warning" value="Targets"></p-tag>
+              <p-tag styleClass="p-mr-2" severity="success" value="Archieved"></p-tag>
+              <p-tag styleClass="p-mr-2" severity="info" value="Submited"></p-tag>
+
+
+            </div><br>
+
+            <!--<div class="badges">
+                <p-badge [value]="" severity="warning" styleClass="p-mr-2"></p-badge><span>Targets</span>
+                <p-badge [value]="" severity="success" styleClass="p-mr-2"></p-badge> Archieved
+                <p-badge [value]="" severity="info" styleClass="p-mr-2"></p-badge>Submited
+                <p-badge [value]="" severity="danger" styleClass="p-mr-2"></p-badge>Rejected
+                <span class="badge badge-warning badge-pill" styleClass="p-mr-2"></span>Submited
+
+            </div> -->
+
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Target Submissions
+                <span class="badge badge-warning badge-pill">2</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Archieved Submissions
+                <span class="badge badge-success badge-pill">{{getMyhotlistConsultants?.length}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Submited
+                <span class="badge badge-info badge-pill">{{hunterconsultants?.length}}</span>
+              </li>
+
+            </ul>
+          </p-tabPanel>
+
+
+        </p-tabView>
+      </p-card>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="(role=='bench-sales')||(role=='jr-bench-sales') || (role=='sales-lead')">
+  <div class="p-grid p-m-2">
+    <div class="p-col-12">
+      <p-card [style]="{ 'margin-top': '0em'}">
+        <h2>My Bench Talent Submissions Summary</h2>
+        <p-tabView>
+          <p-tabPanel header="Bench Talent submissions List">
+            <p-table [value]="benchtalents" [scrollable]="true" scrollHeight="150px">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th scope="col">Bench Talent Name</th>
+
+                  <th scope="col">Total Submissions</th>
+                  <th scope="col">Consultant Age(days)</th>
+                  <th scope="col">Interviews</th>
+                  <th scope="col">Submit to Client</th>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-talent>
+                <tr *ngIf="talent.totalsubmissions">
+                  <th scope="row">{{talent.first_name}} {{talent.last_name}} </th>
+                  <td>{{talent.totalsubmissions}}</td>
+                  <td>{{calculateDiff(talent.created_at|date)}} </td>
+                  <td>{{talent.vendor_cout_count}}</td>
+                  <td>{{talent.vendor_add_count}}</td>
+
+                </tr>
+              </ng-template>
+            </p-table>
+
+
+          </p-tabPanel>
+        </p-tabView>
+      </p-card>
+    </div>
+
+  </div>
+  <div class="p-grid p-m-2">
+    <div class="p-col-4">
+      <p-card [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <h2> My Submission Activity
+          <p-dropdown class="p-m-5" [options]="cities" (onChange)="onStatusBencshalesChange($event)"
+            [(ngModel)]="selectedBenchsaleActivity" optionLabel="name"></p-dropdown>
+        </h2>
+        <p-tabView>
+          <p-tabPanel header="Submissions">
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Submissions <span class="badge badge-primary badge-pill">{{totalsubmissionsbyuser?.length}}</span>
+              </li>
+            </ul>
+            <p-table [value]="totalsubmissionsbyuser" [scrollable]="true" scrollHeight="150px">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Consultant Name</th>
+                  <th>Client</th>
+                  <th>Status</th>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-customer>
+                <tr>
+                  <td>{{customer.consultant?.name}}</td>
+                  <td>{{customer.clients?.name}}</td>
+                  <td>{{customer.submissionStatus}}</td>
+
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-tabPanel>
+        </p-tabView>
+      </p-card>
+    </div>
+    <div class="p-col-4">
+      <p-card [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <h2>  Interview Schedules <p-dropdown class="p-m-2"  [options]="interviewDropDown" [(ngModel)]="selectInterviewBenchTalent" (onChange)="onInterviewsBenchSales($event)" optionLabel="name"></p-dropdown> </h2>
+        <p-tabView>
+          <p-tabPanel header="Interview Schedules">
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                Total Interview Schedules<span class="badge badge-primary badge-pill">{{benchsalesInterviews?.length}}</span>
+              </li>
+            </ul>
+            <p-table [value]="benchsalesInterviews" [scrollable]="true" scrollHeight="150px">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Consultant Name</th>
+                  <th>Client</th>
+                  <th>Schedule Date</th>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-customer>
+                <tr>
+                  <td>{{customer.consultant?.name}}</td>
+                  <td>{{customer.clients?.name}}</td>
+                  <td>{{customer.scheduleDate |date}}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </p-tabPanel>
+
+        </p-tabView>
+      </p-card>
+    </div>
+    <div class="p-col-4">
+      <p-card [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <h2> Target Activity <p-dropdown class="p-m-5" [options]="cities" (onChange)="onStatusBencshalesChange($event)"
+            [(ngModel)]="selectedBenchsaleActivity" optionLabel="name"></p-dropdown>
+        </h2>
+        <p-tabView>
+          <p-tabPanel header="Target">
+            <div class="badges">
+              <p-tag styleClass="p-mr-2" severity="warning" value="Targets"></p-tag>
+              <p-tag styleClass="p-mr-2" severity="success" value="Archieved"></p-tag>
+
+            </div><br>
+
+            <!--<div class="badges">
+                <p-badge [value]="" severity="warning" styleClass="p-mr-2"></p-badge><span>Targets</span>
+                <p-badge [value]="" severity="success" styleClass="p-mr-2"></p-badge> Archieved
+                <p-badge [value]="" severity="info" styleClass="p-mr-2"></p-badge>Submited
+                <p-badge [value]="" severity="danger" styleClass="p-mr-2"></p-badge>Rejected
+                <span class="badge badge-warning badge-pill" styleClass="p-mr-2"></span>Submited
+
+            </div> -->
+
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Target Submissions
+                <span class="badge badge-warning badge-pill">2</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Archieved Submissions
+                <span class="badge badge-success badge-pill">{{totalsubmissionsbyuser?.length}}</span>
+              </li>
+
+
+            </ul>
+          </p-tabPanel>
+
+
+        </p-tabView>
+      </p-card>
+    </div>
+  </div>
+</div>
+<div *ngIf="(role=='accountmanager')||(role=='bdm')">
+  <div class="p-grid p-m-2">
+    <div class="p-col">
+      <p-card [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <h2>  Interview Schedules <p-dropdown class="p-m-2"  [options]="interviewDropDown" [(ngModel)]="selectInterviewBenchTalent" (onChange)="onInterviewsConsultants($event)" optionLabel="name"></p-dropdown> </h2>
+
+        <p-tabView>
+          <p-tabPanel header="Interviews">
+            <p-table [value]="interviewjobsschedules" [scrollable]="true" scrollHeight="150px">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th scope="col">Applicant Name</th>
+                  <th scope="col">Assigned On</th>
+                  <th scope="col">Job Title</th>
+                  <th scope="col">Prime Vendor</th>
+                  <th scope="col">Client Name</th>
+                  <th scope="col">Schedule Date</th>
+                  <th scope="col">Status</th>
+
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-app>
+                <tr>
+                  <th scope="row">{{app.first_name}} {{app.last_name}}</th>
+                  <td>{{app.user?.name}}</td>
+                  <td>{{app.with_jobs?.job_title}}</td>
+                  <td>{{app.with_jobs?.clients?.name}}</td>
+                  <td>
+                    {{app.with_jobs?.primevendor?.name}}
+                  </td>
+                  <td>{{app?.schedule_date|date}} {{app?.timezone}}</td>
+                  <td>{{app.consultant_status}}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+
+          </p-tabPanel>
+        </p-tabView>
+      </p-card>
+    </div>
+    <!--<div class="p-col-4">
+      <p-card header="" [style]="{'height': '27rem', 'margin-top': '0em'}">
+        <h2> My Recruitment Activity<p-dropdown class="p-m-5" [options]="cities" (onChange)="onStatusBencshalesChange($event)"
+          [(ngModel)]="selectedBenchsaleActivity" optionLabel="name"></p-dropdown>
+          </h2>
+        <p-tabView>
+          <p-tabPanel header="Activity">
+
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Active Jobs
+                <span class="badge badge-primary badge-pill">{{jobs?.length}}</span>
+              </li>
+
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Interviews
+                <span class="badge badge-primary badge-pill">{{myinterviews}}</span>
+              </li>
+
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Placements
+                <span class="badge badge-primary badge-pill">{{placed}}</span>
+              </li>
+            </ul>
+          </p-tabPanel>
+
+        </p-tabView>
+      </p-card>
+    </div> -->
+
+   <!-- <div class="p-col-4">
+      <p-card header="Jobs Applicants" [style]="{'height': '27rem', 'margin-bottom': '0em'}">
+        <p-chart type="pie" [data]="data1" [options]="options" width="30vw" height="30vh"></p-chart>
+      </p-card>
+    </div> -->
+
+  </div>
+  <div class="p-grid p-m-2">
+
+    <div class="p-col-12">
+      <p-card>
+        <h2> My Recruitment Summary<p-dropdown class="p-m-2"  [options]="assignUsers" [(ngModel)]="selectedAssignusers" (onChange)="onChangeUserSubmissions($event)" placeholder="All Assignees" optionValue="id" optionLabel="name"></p-dropdown></h2>
+
+      <p-tabView>
+        <p-tabPanel  header="My Jobs Summary">
+
+
+          <p-table [value]="jobs" [scrollable]="true" scrollHeight="150px">
+            <ng-template pTemplate="header">
+              <tr>
+                <th scope="col">Active Jobs</th>
+                <th scope="col">W2 Submissions</th>
+                <th scope="col">C2C Submissions</th>
+                <th scope="col">Submited to Client</th>
+                <th scope="col">Job Age</th>
+                <th scope="col">Interviews</th>
+                <th scope="col">Placements</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-job>
+              <tr >
+                <th scope="row">{{job.job_title}}</th>
+                <td>{{job.w2}}</td>
+                <td>{{job.c2c}}</td>
+                <td>{{job.benchtalentswhereclient_count}}</td>
+                <td>{{calculateDiff(job.created_at|date)}} </td>
+                <td>{{job.benchtalentswhere_count}}</td>
+                <td>{{job.placed}}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-tabPanel>
+      </p-tabView>
+    </p-card>
+  </div>
+
+  </div>
+
+
+
+</div>
+<!--
+<p-dialog header="" [(visible)]="displayBasic2"  (onHide)="hidemodal()" [style]="{width: '35vw'}" [baseZIndex]="10000"
+[draggable]="true" [resizable]="false"  >
+<img src="../assets/img/banner.jpg" width="100%"/>
+
+</p-dialog> -->

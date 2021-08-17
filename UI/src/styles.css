@@ -1,0 +1,38 @@
+/* You can add global styles to this file, and also import other style files */
+.cyan {
+  background-color: #a11b34 !important;
+}
+.huntercolor{
+  background-color: #7952b3 !important;
+}
+.text-muted {
+  color: #df0e27 !important;
+}
+body{
+  background-color:#eee ;
+  font-size: 14px;
+}
+html{
+  font-size: 13px;
+}
+
+
+.navbar-dark .navbar-nav .nav-link
+{
+  color: #f8f9fa !important;
+}
+.admincolor{
+  background-color: #a11b34 !important;
+}
+.huntercolor{
+  background-color: #7952b3 !important;
+}
+.recruitercolor{
+  background-color: #212529 !important;
+}
+.mangercolor{
+  background-color: #3db36b !important;
+}
+.benchsalescolor{
+  background-color: #7952b3 !important;
+}
